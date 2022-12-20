@@ -1,0 +1,35 @@
+@use 'utils/variables';
+
+.expenses-details {
+    width: 80%;
+    margin: auto;
+
+    .expenses-details-content {
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-start;
+        row-gap: calc(variables.$base-form-gutter-size / 2);
+        column-gap: variables.$base-form-gutter-size;
+
+        input, textarea, select {
+            width: 100%;
+        }
+
+        .date, .amount, .type, .category {
+            flex-basis: 20%;
+        }
+
+        .comment {
+            width: 100%;
+            textarea {
+                height: 5rem;
+                resize: none;
+            }
+        }
+
+        .edit-btn {
+            margin-left: auto;
+        }
+    }
+
+}

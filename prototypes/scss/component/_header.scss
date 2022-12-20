@@ -1,0 +1,51 @@
+@use 'utils/variables';
+
+.container-header {
+    width: 100%;
+    padding: 20px;
+    background-color: variables.$main-color;
+    border-bottom: 10px solid variables.$accent-color;
+
+    header {
+        display: flex;
+        align-items: center;
+    }
+}
+
+.header-logo {
+    flex: 1 1 40px;
+
+    a:link, a:visited {
+        text-decoration: none;
+        font-size: 2.441rem;
+        font-weight: 700;
+        letter-spacing: -2px;
+        color: variables.$accent-color;
+        text-shadow: 3px 3px 0 variables.$accent-color-shade50;
+    }
+}
+
+.header-nav {
+    > ul {
+        list-style: none;
+        li {
+            display: inline;
+
+            a {
+                padding: 0 5px;
+                text-decoration: none;
+                font-size: 1.25rem;
+                font-weight: 700;
+                color: variables.$accent-color-shade20;
+                border-radius: variables.$default-border-radius;
+
+                &:hover {
+                    background-color: variables.$main-color-tint20;
+                }
+                &:active {
+                    background-color: variables.$main-color-tint10;
+                }
+            }
+        }
+    }
+}

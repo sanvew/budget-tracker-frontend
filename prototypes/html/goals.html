@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Budget tracker goals</title>
+
+    <link rel="stylesheet" type="text/css" href="../output/css/styles.css">
+</head>
+<body>
+    <div class="container-header">
+        <header>
+            <div class="header-logo">
+                <a href="/">Budget Tracker</a>
+            </div>
+            <nav class="header-nav">
+                <ul>
+                    <li><a href="index.html">Overview</a></li>
+                    <li><a href="expenses.html">Expenses/Earnigns</a></li>
+                    <li><a href="goals.html">Goals</a></li>
+                </ul>
+            </nav>
+        </header>
+    </div>
+    <main class="layout-goals">
+        <section class="card-main goals-filter">
+            <label for="search">Search</label>
+            <input type="search" name="search">
+            <input type="checkbox" name="done">
+            <label for="done">Done</label>
+            <input type="checkbox" name="in_progress">
+            <label for="in_progress">In progess</label>
+        </section>
+        <section class="goals-list">
+            <article class="card-main goals-item">
+                <div class="goal-title"><h3>Some goal</h3></div>
+                <progress class="goal-progress-bar" max="100" value="50"></progress>
+                <h4 class="goal-progress"><span class="digital-value">50</span> GEL from <span class="digital-value">100</span> GEL</h4>
+                <button class="acc-acc-main-button">Details</button>
+                <!-- TODO: add modal window or page with description (comments) and other stats -->
+            </article>
+            <article class="card-main goals-item">
+                <div class="goal-title"><h3>Macbook Air M2</h3></div>
+                <progress class="goal-progress-bar" max="1500" value="200"></progress>
+                <h4 class="goal-progress"><span class="digital-value">200</span> EUR from <span class="digital-value">1000</span> EUR</h4>
+                <button class="acc-acc-main-button">Details</button>
+            </article>
+            <article class="card-main goals-item goal-done">
+                <div class="goal-title"><h3>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt, repellendus animi. Unde earum placeat cum sint veritatis, soluta, numquam iusto, dolorum in praesentium porro ullam. In dolores dicta non inventore?</h3></div>
+                <progress class="goal-progress-bar" max="400" value="400"></progress>
+                <h4 class="goal-progress"><span class="digital-value">400</span> USD from <span class="digital-value">400</span> USD</h4>
+                <button class="acc-acc-main-button">Details</button>
+            </article>
+        </section>
+    </main>
+    <footer>
+        <p>Created by <a href="https://github.com/sanvew/budget-tracker-ui" target="_blank" rel="noopener noreferrer">sanvew</a>. 2022</p>
+    </footer>
+</body>
+</html>

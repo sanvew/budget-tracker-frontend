@@ -1,0 +1,9 @@
+@use 'utils/functions';
+@use 'utils/mixins';
+
+.layout-goals {
+    @include mixins.page-base-layout;
+
+    grid-template-columns: functions.grid-column-partition((1));
+    align-items: start;
+}

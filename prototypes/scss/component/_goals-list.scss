@@ -1,0 +1,9 @@
+@use 'utils/variables';
+
+.goals-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-content: flex-start;
+    gap: variables.$base-gutter-size;
+}

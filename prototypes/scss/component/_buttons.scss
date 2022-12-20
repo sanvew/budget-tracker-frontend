@@ -1,0 +1,65 @@
+@use 'utils/functions';
+@use 'utils/mixins';
+@use 'utils/variables';
+
+/*
+    Naming rule: !{bg-color}-!{hover-color}-{font-color}-button
+    Options:
+        bg-color: clear | 'color name from base/colors'
+        hover-color: clear | 'color name from base/colors'
+        font-color:  default (def) | 'color name from base/colors'
+ */
+.acc-acc-main-button {
+    @include mixins.button(
+        variables.$main-color-tint10,
+        variables.$accent-color-tint20, variables.$transperent-color,
+        variables.$accent-color-tint40, variables.$transperent-color,
+        variables.$accent-color-tint30, variables.$transperent-color
+    );
+
+}
+
+.main-main-acc-button {
+    @include mixins.button(
+        variables.$accent-color-tint10,
+        variables.$main-color-tint20, variables.$transperent-color,
+        variables.$main-color-tint40, variables.$transperent-color,
+        variables.$main-color-tint30, variables.$transperent-color
+    );
+}
+
+.clear-main-button {
+    @include mixins.button(
+        variables.$main-font-color,
+        variables.$transperent-color, variables.$transperent-color,
+        variables.$main-color-tint70, variables.$transperent-color,
+        variables.$main-color-tint60, variables.$transperent-color
+    );
+}
+
+.clear-acc-button {
+    @include mixins.button(
+        variables.$main-font-color,
+        variables.$transperent-color, variables.$transperent-color,
+        variables.$accent-color-tint70, variables.$transperent-color,
+        variables.$accent-color-tint60, variables.$transperent-color
+    );
+}
+
+.clear-main-acc-button {
+    @include mixins.button(
+        variables.$accent-color-tint20,
+        variables.$transperent-color, variables.$transperent-color,
+        variables.$main-color-tint70, variables.$transperent-color,
+        variables.$main-color-tint60, variables.$transperent-color
+    );
+}
+
+.red-red-red-button, .delete-button {
+    @include mixins.button(
+        functions.shade(variables.$red-color, 50%),
+        variables.$red-color, variables.$transperent-color,
+        functions.tint(variables.$red-color, 20%), variables.$transperent-color,
+        functions.tint(variables.$red-color, 10%), variables.$transperent-color
+    );
+}

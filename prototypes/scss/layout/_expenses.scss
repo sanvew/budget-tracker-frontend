@@ -1,0 +1,15 @@
+@use 'utils/functions';
+@use 'utils/mixins';
+
+.layout-expenses {
+    @include mixins.page-base-layout;
+
+    grid-template-columns: functions.grid-column-partition((1.2, 2.8));
+    grid-template-rows: min-content 1fr;
+    align-items: start;
+    
+    > .expenses-list {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+    }
+}

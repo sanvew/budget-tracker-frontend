@@ -1,0 +1,40 @@
+@use 'utils/variables';
+@use 'utils/mixins';
+
+h1, h2, h3, h4, h5 {
+    font-weight: variables.$x-bold-font-weight;
+}
+
+h1, h2, h3 {
+    letter-spacing: -1.2px;
+}
+
+h1 { font-size: variables.$largest-font-size; }
+
+h2 { font-size: variables.$xxx-large-font-size; }
+
+h3 { font-size: variables.$xx-large-font-size; }
+
+h4 { font-size: variables.$x-large-font-size; }
+
+h5 { font-size: variables.$large-font-size; }
+
+small { font-size: variables.$small-font-size; }
+
+.digital-value { 
+    @include mixins.digital-element;
+}
+
+.income-value {
+    @include mixins.digital-element;
+
+    color: variables.$income-font-color;
+    font-weight: variables.$bold-font-weight;
+}
+
+.outcome-value {
+    @include mixins.digital-element;
+
+    color: variables.$outcome-font-color;
+    font-weight: variables.$bold-font-weight;
+}

@@ -1,0 +1,41 @@
+@use 'utils/variables';
+
+.expenses-filter {
+
+    .filter-heading {
+        margin-bottom: 16px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .filter-input {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-content: flex-start;
+        row-gap: calc(variables.$base-form-gutter-size / 2);
+        column-gap: variables.$base-form-gutter-size;
+        
+        input, select {
+            width: 100%;
+
+            &[type=date]::-webkit-datetime-edit {
+                // reseting width to fit the parent
+                margin-right: -100px;
+            }
+        }
+
+        .date-from, .date-to {
+            flex-basis: 49%;
+        }
+
+        .category, .type, .submit {
+            flex-basis: 100%;
+        }
+
+        .submit > button {
+            width: 100%;
+            display: block;
+        }
+    }
+}

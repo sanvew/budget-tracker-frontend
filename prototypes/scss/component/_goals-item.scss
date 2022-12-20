@@ -1,0 +1,29 @@
+@use 'utils/functions';
+@use 'utils/variables';
+
+.goals-item {
+    width: functions.grid-column-partition-nth((1, 1), 1);
+
+    .goal-title {
+        h3 {
+            width: 80%;
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
+
+    .goal-progress-bar[value] {
+        width: 100%;
+    }
+}
+
+.goal-done .goal-title::after {
+    content: "Done";
+    padding: 2px 4px;
+    font-weight: variables.$bold-font-weight;
+    background-color: variables.$green-color;
+    border-radius: variables.$default-border-radius;
+    vertical-align: top;
+}

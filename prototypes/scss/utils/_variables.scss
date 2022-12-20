@@ -1,0 +1,96 @@
+@use 'sass:color';
+
+/************ Border ************/
+$default-border-radius: 5px;
+
+/************ Colors ************/
+// work around of circular dependecy
+@function _tint($color, $percentage) { @return color.mix(#FFF, $color, $percentage); }
+@function _shade($color, $percentage) { @return color.mix(#000, $color, $percentage); }
+// TODO: make palette for expenses categories
+// Main color
+$main-color: #1c658c;
+// Tints
+$main-color-tint10: _tint($main-color, 10%);
+$main-color-tint20: _tint($main-color, 20%);
+$main-color-tint30: _tint($main-color, 30%);
+$main-color-tint40: _tint($main-color, 40%);
+$main-color-tint50: _tint($main-color, 50%);
+$main-color-tint60: _tint($main-color, 60%);
+$main-color-tint70: _tint($main-color, 70%);
+$main-color-tint80: _tint($main-color, 80%);
+$main-color-tint90: _tint($main-color, 90%);
+// shades 
+$main-color-shade10: _shade($main-color, 10%);
+$main-color-shade20: _shade($main-color, 20%);
+$main-color-shade30: _shade($main-color, 30%);
+$main-color-shade40: _shade($main-color, 40%);
+$main-color-shade50: _shade($main-color, 50%);
+$main-color-shade60: _shade($main-color, 60%);
+$main-color-shade70: _shade($main-color, 70%);
+$main-color-shade80: _shade($main-color, 80%);
+$main-color-shade90: _shade($main-color, 90%);
+
+// Accent color
+$accent-color: #ff7e67;
+// tints
+$accent-color-tint10: _tint($accent-color, 10%);
+$accent-color-tint20: _tint($accent-color, 20%);
+$accent-color-tint30: _tint($accent-color, 30%);
+$accent-color-tint40: _tint($accent-color, 40%);
+$accent-color-tint50: _tint($accent-color, 50%);
+$accent-color-tint60: _tint($accent-color, 60%);
+$accent-color-tint70: _tint($accent-color, 70%);
+$accent-color-tint80: _tint($accent-color, 80%);
+$accent-color-tint90: _tint($accent-color, 90%);
+// shades 
+$accent-color-shade10: _shade($accent-color, 10%);
+$accent-color-shade20: _shade($accent-color, 20%);
+$accent-color-shade30: _shade($accent-color, 30%);
+$accent-color-shade40: _shade($accent-color, 40%);
+$accent-color-shade50: _shade($accent-color, 50%);
+$accent-color-shade60: _shade($accent-color, 60%);
+$accent-color-shade70: _shade($accent-color, 70%);
+$accent-color-shade80: _shade($accent-color, 80%);
+$accent-color-shade90: _shade($accent-color, 90%);
+
+// Util colors
+$page-background-color: #e9e9e9;
+$shadow-color: #dadada;
+$green-color:#2ecc71;
+$red-color:#e74c3c;
+$transperent-color:  rgba(255, 255, 255, 0);
+$modal-background-color: rgba(0, 0, 0, 0.4);
+$modal-background-blur: blur(5px);
+
+// Text colors
+$main-font-color: #363636;
+$income-font-color: $green-color;
+$outcome-font-color: $red-color;
+
+/************ Layout ************/
+$base-layout-width: 1272px;
+$base-gutter-size: 10px;
+$base-form-gutter-size: 4px;
+
+/************ Typography ************/ 
+// Font sizes
+$largest-font-size: 3.052rem;
+$xxx-large-font-size: 2.441rem;
+$xx-large-font-size: 1.953rem;
+$x-large-font-size: 1.563rem;
+$large-font-size: 1.25rem;
+$medium-font-size: 24px;
+$small-font-size: 0.8rem;
+$x-small-font-size: 0.64rem;
+$xx-small-font-size: 0.512rem;
+
+// Font weights
+$x-bold-font-weight: 700;
+$bold-font-weight: 500;
+$medium-font-weight: 400;
+
+$base-font-size: $medium-font-size;
+$base-font-weight: $medium-font-weight;
+$base-font-family: "Noto Sans", sans-serif;
+$base-font-family-digits: "Noto Sans Mono", sans-serif;

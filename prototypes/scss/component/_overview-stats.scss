@@ -1,0 +1,13 @@
+@use 'utils/variables';
+
+.overview-stats {
+    h2:first-child {
+        border-bottom: 2px solid variables.$main-color-tint20;
+    }
+
+    .more-button {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+}

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Budget tracker expenses</title>
+
+    <link rel="stylesheet" type="text/css" href="../output/css/styles.css">
+    <script>
+        window.addEventListener('load', () => {
+            const body = document.querySelector('body');
+            const modalMarker = document.querySelector('#expenses-details');
+            const dataRows = document.querySelectorAll('tr.data-row');
+            let modal = null;
+            let modalCloseBtn = null;
+            let modalOkBtn = null;
+            let modalEditBtn = null;
+
+            const showModal = () => {
+                modal.style.display = 'block';
+                body.classList.add('modal-open');
+            };
+            const hideModal = () => {
+                modal.style.display = 'none';
+                body.classList.remove('modal-open');
+            };
+            const editDetails = () => {
+                modal.querySelectorAll('.expenses-details-content input, .expenses-details-content select, .expenses-details-content textarea')
+                    .forEach((el) => {
+                        el.disabled = false;
+                    })
+                modal.querySelectorAll('.expenses-details-content button:not([hidden])')
+                    .forEach((el) => {
+                        el.style.display = 'none';
+                    });
+                modal.querySelectorAll('.expenses-details-content button[hidden]')
+                    .forEach((el) => {
+                        el.hidden = false;
+                    });
+            };
+
+            const modalObserver = new MutationObserver((mutations) => {
+                modalCloseBtn.onclick = hideModal;
+                modalOkBtn.onclick = hideModal;
+                modalEditBtn.onclick = editDetails;
+                dataRows.forEach((row) => row.onclick = showModal);
+            });
+            modalObserver.observe(modalMarker, {childList: true});
+
+            fetch('./modal/expenses-details.html')
+            .then(response => {
+                return response.text()
+            })
+            .then(data => {
+                modalMarker.innerHTML = data;
+                modal = modalMarker.querySelector('.modal-container');
+                modalCloseBtn = modal.querySelector('.modal-heading .close-btn');
+                modalOkBtn = modal.querySelector('.expenses-details-content .ok-btn');
+                modalEditBtn = modal.querySelector('.expenses-details-content .edit-btn');
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container-header">
+        <header>
+            <div class="header-logo">
+                <a href="/">Budget Tracker</a>
+            </div>
+            <nav class="header-nav">
+                <ul>
+                    <li><a href="index.html">Overview</a></li>
+                    <li><a href="expenses.html">Expenses/Earnigns</a></li>
+                    <li><a href="goals.html">Goals</a></li>
+                </ul>
+            </nav>
+        </header>
+    </div>
+    <main class="layout-expenses">
+        <aside class="card-main expenses-filter">
+            <div class="filter-heading">
+                <h4>Filter</h4>
+                <button class="clear-main-acc-button"><h4>clear</h4></button>
+            </div>
+            <div class="filter-input">
+                <div class="date-from">
+                    <input type="text" placeholder="From:" onfocusin="this.type='date'; this.showPicker()" onfocusout="(this.type='text')">
+                </div>
+                <div class="date-to">
+                    <input type="text" placeholder="To:" onfocusin="this.type='date'; this.showPicker()" onfocusout="(this.type='text')">
+                </div>
+                <div class="flex-row-break"></div>
+                <div class="category">
+                    <select>
+                        <option value="" disabled selected>Select category</option>
+                        <option value="groceries">groceries</option>
+                        <option value="sport">sport</option>
+                        <option value="transport">transport</option>
+                    </select>
+                    <!-- TODO: use https://www.npmjs.com/package/@yaireo/tagify library -->
+                </div>
+                <div class="flex-row-break"></div>
+                <div class="type">
+                    <select>
+                        <option value="" disabled selected>Select type</option>
+                        <option value="outcome">All</option>
+                        <option value="outcome">Outcome</option>
+                        <option value="income">Income</option>
+                    </select>
+                </div>
+                <div class="flex-row-break"></div>
+                <div class="submit">
+                    <button class="acc-acc-main-button">Select</button>
+                </div>
+            </div>
+        </aside>
+        <aside class="card-main expenses-new-record">
+            <h4>New record</h4>
+            <div class="new-record-input">
+                <div class="date">
+                    <input type="text" placeholder="Date" name="date-from" onfocusin="this.type='date'; this.showPicker()" onfocusout="(this.type='text')">
+                </div>
+                <div class="flex-row-break"></div>
+                <div class="amount">
+                    <input type="number" placeholder="Amount" name="amount">
+                </div>
+                <div class="currency">
+                    <select>
+                        <option value="" disabled selected>CUR</option>
+                        <option value="gel">GEL</option>
+                        <option value="usd">USD</option>
+                        <option value="eur">EUR</option>
+                        <option value="rub">RUB</option>
+                    </select>
+                </div>
+                <div class="flex-row-break"></div>
+                <div class="category">
+                    <select>
+                        <option value="" disabled selected>Select category</option>
+                        <option value="groceries">groceries</option>
+                        <option value="sport">sport</option>
+                        <option value="transport">transport</option>
+                        <option value="salary">salary</option>
+                    </select>
+                </div>
+                <div class="flex-row-break"></div>
+                <div class="type">
+                    <select>
+                        <option value="outcome" selected>Outcome</option>
+                        <option value="income">Income</option>
+                        <!-- TODO: assume category based on record type income/outcome -->
+                    </select>
+                </div>
+                <div class="flex-row-break"></div>
+                <div class="comment">
+                    <textarea placeholder="Comment..."></textarea>
+                </div>
+                <div class="flex-row-break"></div>
+                <div class="submit">
+                    <button class="acc-acc-main-button">Add</button>
+                </div>
+            </div>
+        </aside>
+        <section class="card-main expenses-list">
+            <div class="list-heading">
+                <h4>Expenses/Earnings</h4>
+                <h5>Found 15 results</h5>
+                <!-- TODO: show count on current page only -->
+            </div>
+            <table class="expenses-table">
+                <tr class="date-row">
+                    <td colspan="3">03 December 2022</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="category">Rent</td>
+                    <td class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit</td>
+                    <td class="amount"><span class="outcome-value">-1337</span> GEL</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="category">Salary</td>
+                    <td class="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio sequi, suscipit at dicta molestias facilis hic incidunt iste obcaecati officiis earum quaerat ex rem consectetur modi aperiam beatae, sed voluptatem?</td>
+                    <td class="amount"><span class="income-value">+1337</span> GEL</td>
+                </tr>
+                <tr class="date-row">
+                    <td colspan="3">01 December 2022</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="category">Sport</td>
+                    <td class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit</td>
+                    <td class="amount"><span class="outcome-value">-40</span> GEL</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="category">Groceries</td>
+                    <td class="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio sequi, suscipit at dicta molestias facilis hic incidunt iste obcaecati officiis earum quaerat ex rem consectetur modi aperiam beatae, sed voluptatem?</td>
+                    <td class="amount"><span class="outcome-value">-30</span> GEL</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="category">Groceries</td>
+                    <td class="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio sequi, suscipit at dicta molestias facilis hic incidunt iste obcaecati officiis earum quaerat ex rem consectetur modi aperiam beatae, sed voluptatem?</td>
+                    <td class="amount"><span class="outcome-value">-10</span> GEL</td>
+                </tr>
+                <tr class="date-row">
+                    <td colspan="3">30 November 2022</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="category">Sport</td>
+                    <td class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit</td>
+                    <td class="amount"><span class="outcome-value">-40</span> GEL</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="category">Groceries</td>
+                    <td class="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio sequi, suscipit at dicta molestias facilis hic incidunt iste obcaecati officiis earum quaerat ex rem consectetur modi aperiam beatae, sed voluptatem?</td>
+                    <td class="amount"><span class="outcome-value">-30</span> GEL</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="category">Groceries</td>
+                    <td class="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio sequi, suscipit at dicta molestias facilis hic incidunt iste obcaecati officiis earum quaerat ex rem consectetur modi aperiam beatae, sed voluptatem?</td>
+                    <td class="amount"><span class="outcome-value">-10</span> GEL</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="category">Transport</td>
+                    <td class="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio sequi, suscipit at dicta molestias facilis hic incidunt iste obcaecati officiis earum quaerat ex rem consectetur modi aperiam beatae, sed voluptatem?</td>
+                    <td class="amount"><span class="outcome-value">-10</span> GEL</td>
+                </tr>
+                <tr class="date-row">
+                    <td colspan="3">29 November 2022</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="category">Sport</td>
+                    <td class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit</td>
+                    <td class="amount"><span class="outcome-value">-40</span> GEL</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="category">Groceries</td>
+                    <td class="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio sequi, suscipit at dicta molestias facilis hic incidunt iste obcaecati officiis earum quaerat ex rem consectetur modi aperiam beatae, sed voluptatem?</td>
+                    <td class="amount"><span class="outcome-value">-30</span> GEL</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="category">Groceries</td>
+                    <td class="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio sequi, suscipit at dicta molestias facilis hic incidunt iste obcaecati officiis earum quaerat ex rem consectetur modi aperiam beatae, sed voluptatem?</td>
+                    <td class="amount"><span class="outcome-value">-10</span> GEL</td>
+                </tr>
+                <tr class="date-row">
+                    <td colspan="3">28 November 2022</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="category">Groceries</td>
+                    <td class="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio sequi, suscipit at dicta molestias facilis hic incidunt iste obcaecati officiis earum quaerat ex rem consectetur modi aperiam beatae, sed voluptatem?</td>
+                    <td class="amount"><span class="outcome-value">-10</span> GEL</td>
+                </tr>
+                <tr class="date-row">
+                    <td colspan="3">27 November 2022</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="category">Food</td>
+                    <td class="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio sequi, suscipit at dicta molestias facilis hic incidunt iste obcaecati officiis earum quaerat ex rem consectetur modi aperiam beatae, sed voluptatem?</td>
+                    <td class="amount"><span class="outcome-value">-12</span> GEL</td>
+                </tr>
+                <tr class="date-row">
+                    <td colspan="3">26 November 2022</td>
+                </tr>
+                <tr class="data-row">
+                    <td class="category">Salary</td>
+                    <td class="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio sequi, suscipit at dicta molestias facilis hic incidunt iste obcaecati officiis earum quaerat ex rem consectetur modi aperiam beatae, sed voluptatem?</td>
+                    <td class="amount"><span class="income-value">+1337</span> GEL</td>
+                </tr>
+            </table>
+            <!-- Pagination only if there are more then 30 results -->
+            <nav class="expenses-list-paging">
+                <a class="clear-main-button" href="#"><</a>
+                <a class="clear-main-button" href="#">1</a>
+                <a class="clear-main-button pressed" >2</a>
+                <a class="clear-main-button" href="#">3</a>
+                <a>...</a>
+                <a class="clear-main-button" href="#">7</a>
+                <a class="clear-main-button" href="#">></a>
+            </nav>
+        </section>
+    </main>
+    <footer>
+        <p>Created by <a href="https://github.com/sanvew/budget-tracker-ui" target="_blank" rel="noopener noreferrer">sanvew</a>. 2022</p>
+    </footer>
+
+    <div id="expenses-details"></div>
+</body>
+</html>

@@ -1,0 +1,14 @@
+.expenses-list {
+    .list-heading {
+        margin-bottom: 16px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+    }
+
+    .expenses-list-paging {
+        width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}

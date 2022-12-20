@@ -1,0 +1,35 @@
+@use 'utils/variables';
+
+input, select, textarea {
+    background-color: variables.$main-color-tint90;
+    padding: 2px;
+    border: 0;
+    border-radius: 5px;
+    font-family: variables.$base-font-family;
+    font-size: variables.$medium-font-size;
+
+}
+
+input {
+    &[type=date] {
+        position: relative;
+
+        &::-webkit-calendar-picker-indicator {
+            background: transparent;
+            color: transparent;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            width: auto;
+            height: auto;
+        }
+
+        &::-webkit-datetime-edit {
+            // reseting height
+            margin-top: -1px;
+            margin-bottom: -1px;
+        }
+    }
+}

@@ -1,0 +1,81 @@
+@use 'sass:selector';
+@use 'sass:list';
+
+@use './variables';
+
+/************ Typography ************/ 
+@mixin base-font {
+    font-family: variables.$base-font-family;
+    font-size: variables.$base-font-size;
+    font-weight: variables.$base-font-weight;
+    color: variables.$main-font-color;
+}
+
+@mixin digital-element {
+    font-family: variables.$base-font-family-digits;
+}
+
+/************ Card ************/ 
+@mixin card($bg-color, $border-color) {
+    padding: 10px;
+    background-color: $bg-color;
+    border: 2px solid $border-color;
+    border-radius: variables.$default-border-radius;
+    box-shadow: 10px 10px 20px variables.$shadow-color;
+}
+
+/************ Button ************/ 
+@mixin button(
+    $font-color,
+    $bg-color, $border-color,
+    $hov-bg-color, $hov-border-color,
+    $act-bg-color, $act-border-color
+) { 
+    font-size: variables.$medium-font-size;
+    font-weight: variables.$x-bold-font-weight;
+    color: $font-color;
+    text-decoration: none;
+
+    background-color: $bg-color;
+    border: 3px solid $border-color;
+    border-radius: variables.$default-border-radius;
+
+    /* Adjustment of button's look on different elements */
+    // if applied on button element
+    @each $sel in selector.append("button", "#{&}") {
+        @at-root #{$sel} {
+            padding: 4px;
+        }
+    }
+
+    // if applied on a element
+    @each $sel in selector.append("a", "#{&}") {
+        @at-root #{$sel} {
+            padding: 2px;
+        }
+    }
+
+    cursor: pointer;
+
+    &:hover {
+        background-color: $hov-bg-color;
+        border: 3px solid $hov-border-color;
+    }
+    &:active {
+        background-color: $act-bg-color;
+        border: 3px solid $act-border-color;
+    }
+    &.pressed {
+        background-color: $act-bg-color;
+        border: 3px solid $act-border-color;
+    }
+}
+
+/************ Layout ************/
+@mixin page-base-layout {
+    padding: variables.$base-gutter-size 0;
+
+    display: grid;
+    gap: variables.$base-gutter-size;
+    justify-content: center;
+}

@@ -1,0 +1,19 @@
+@use 'assets/scss/utils/mixins';
+@use 'assets/scss/utils/variables';
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    @include mixins.base-font;
+    background-color: variables.$page-background-color;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}

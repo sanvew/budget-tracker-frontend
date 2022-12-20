@@ -1,0 +1,43 @@
+@use 'sass:color';
+@use 'sass:list';
+
+@use './variables';
+
+/************ Colors ************/
+@function tint($color, $percentage) {
+    @return color.mix(#FFF, $color, $percentage);
+}
+
+@function shade($color, $percentage) {
+    @return color.mix(#000, $color, $percentage);
+}
+
+/************ Layout ************/
+@function list-sum($list) {
+    $sum: 0;
+    @each $val in $list {
+        $sum: $sum + $val;
+    }
+    @return $sum;
+}
+
+@function grid-column-partition($cols-ratio: (1), $container-width: variables.$base-layout-width, $gutter: variables.$base-gutter-size) {
+    $ratio-sum: list-sum($cols-ratio);
+    $ratio-length: list.length($cols-ratio);
+    $out-list: ();
+    @each $val in $cols-ratio {
+        $out-list: list.append(
+            $out-list,
+            calc($container-width * ($val / $ratio-sum) - ($gutter / 2) * ($ratio-length - 1)),
+            space
+        );
+    }
+    @return $out-list;
+}
+
+@function grid-column-partition-nth($cols-ratio: (1), $n: 1, $container-width: variables.$base-layout-width, $gutter: variables.$base-gutter-size) {
+    @return list.nth(
+        grid-column-partition($cols-ratio, $container-width, $gutter),
+        $n
+    );
+}

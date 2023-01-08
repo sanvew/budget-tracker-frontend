@@ -1,0 +1,6 @@
+@use 'assets/scss/utils/variables';
+
+footer {
+    width: variables.$base-layout-width;
+    margin: auto auto variables.$base-gutter-size auto;
+}

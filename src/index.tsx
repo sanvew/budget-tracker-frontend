@@ -1,8 +1,9 @@
+// TODO: eslint with eslint-plugin-react-hooks
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from 'component/App';
+import App from 'page/App';
 
-import 'assets/scss/base/_index.scss';
+import 'assets/scss/_index.scss';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

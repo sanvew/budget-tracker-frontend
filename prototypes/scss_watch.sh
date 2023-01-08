@@ -1,3 +1,5 @@
+#!/bin/sh
+
 SRC_FILE='styles.scss'
 SRC_DIR='./scss'
 

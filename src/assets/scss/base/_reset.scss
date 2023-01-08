@@ -5,6 +5,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    outline: none;
 }
 
 html, body {
@@ -12,7 +13,8 @@ html, body {
     background-color: variables.$page-background-color;
 }
 
-body {
+// react root element
+#root {
     min-height: 100vh;
     display: flex;
     flex-direction: column;

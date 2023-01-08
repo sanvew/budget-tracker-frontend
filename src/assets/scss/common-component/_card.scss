@@ -1,0 +1,10 @@
+@use 'assets/scss/utils/mixins';
+@use 'assets/scss/utils/variables';
+
+.card-main {
+    @include mixins.card(variables.$main-color-tint80, variables.$main-color-tint20);
+}
+
+.card-accent {
+    @include mixins.card(variables.$accent-color-tint80, variables.$accent-color-tint20);
+}

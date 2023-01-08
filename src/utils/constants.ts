@@ -1,0 +1,1 @@
+export const IPSUM_LOREM = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio sequi, suscipit at dicta molestias facilis hic incidunt iste obcaecati officiis earum quaerat ex rem consectetur modi aperiam beatae, sed voluptatem?';

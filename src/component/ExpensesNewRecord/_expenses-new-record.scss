@@ -1,0 +1,48 @@
+@use 'assets/scss/utils/variables';
+
+.expenses-new-record {
+    h4:first-child {
+        margin-bottom: 16px;
+    }
+
+    .new-record-input {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-content: flex-start;
+        row-gap: calc(variables.$base-form-gutter-size / 2);
+        column-gap: variables.$base-form-gutter-size;
+        
+        input, select, textarea, tags {
+            width: 100%;
+        }
+
+        .amount {
+            flex-basis: 69%;
+
+            input[type=number] {
+                &::-webkit-inner-spin-button {
+                    -webkit-appearance: none;
+                }
+            }
+        }
+
+        .currency {
+            flex-basis: 29%;
+        }
+
+        .date, .category, .type, .comment, .submit{
+            flex-basis: 100%;
+        }
+
+        .comment > textarea {
+            resize: none;
+            height: 4rem;
+        }
+
+        .submit > button {
+            width: 100%;
+            display: block;
+        }
+    }
+}

@@ -1,0 +1,48 @@
+@use 'assets/scss/utils/variables';
+
+@import "@yaireo/tagify/src/tagify.scss";
+
+input, select, textarea, tags {
+    background-color: variables.$main-color-tint90;
+    padding: 2px;
+    border: 0;
+    border-radius: variables.$default-border-radius;
+    font-family: variables.$base-font-family;
+    font-size: variables.$medium-font-size;
+
+    &:focus {
+        outline: variables.$main-color-tint20 solid 1px;
+    }
+}
+
+input {
+    &[type=date] {
+        position: relative;
+
+        &::-webkit-calendar-picker-indicator {
+            background: transparent;
+            color: transparent;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            width: auto;
+            height: auto;
+        }
+
+        &::-webkit-datetime-edit {
+            // reseting height
+            margin-top: -1px;
+            margin-bottom: -1px;
+        }
+    }
+}
+
+.tagify {
+    --tag-pad: 0;
+    --tag-border-radius: #{variables.$default-border-radius};
+    --tag-text-color: #{variables.$main-font-color};
+    --tags-focus-border-color: #{variables.$main-color-tint20};
+    --tags-hover-border-color: #{variables.$main-color-tint90};
+}

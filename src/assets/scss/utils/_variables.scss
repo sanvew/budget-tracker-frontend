@@ -4,7 +4,7 @@
 $default-border-radius: 5px;
 
 /************ Colors ************/
-// work around of circular dependecy
+// workaround of circular dependency issue
 @function _tint($color, $percentage) { @return color.mix(#FFF, $color, $percentage); }
 @function _shade($color, $percentage) { @return color.mix(#000, $color, $percentage); }
 // TODO: make palette for expenses categories

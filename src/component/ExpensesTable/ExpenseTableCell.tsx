@@ -6,7 +6,7 @@ type Props = {
     currency: string,
 }
 
-export const ExpensesDataTableCell = ({ category, description, amount, expenseType, currency}: Props) => {
+const ExpenseTableCell = ({ category, description, amount, expenseType, currency}: Props) => {
     const amountSign = expenseType === 'outcome' ? '-' : '+';
     const amountClass = expenseType === 'outcome' ? 'outcome-value' : 'income-value';
 
@@ -18,3 +18,5 @@ export const ExpensesDataTableCell = ({ category, description, amount, expenseTy
         </tr>
     )
 }
+
+export default ExpenseTableCell;

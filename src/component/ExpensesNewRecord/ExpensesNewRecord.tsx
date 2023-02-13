@@ -1,10 +1,34 @@
 import { DateInput, TagSelect, SimpleSelect } from 'component/form';
+import { useAppDispatch } from 'hook';
+import { addExpense } from 'store/reducer/expenses';
 
 import './_expenses-new-record.scss';
 
 type Props = {}
 
+// TODO: add toast message for result of add Record
 export const ExpensesNewRecord = (props: Props) => {
+    const dispatch = useAppDispatch()
+
+
+    const submit = () => {
+        // TODO: dispatch actual data
+        dispatch(
+            addExpense({
+                id: crypto.randomUUID(),
+                date: new Date(Date.now()),
+                createDate: new Date(Date.now()),
+                updateDate: new Date(Date.now()),
+                category: 'new cat2',
+                description: 'another description',
+                amount: 1377,
+                expenseType: 'income',
+                currency: 'GEL'
+            })
+        )
+    }
+
+
     const dummyCurrencies = [["gel", "GEL"], ["usd", "USD"], ["eur", "EUR"], ["rub", "RUB"]]
     const dummyCategories = ["groceries", "sport", "transport"];
     const dummyTypes: [string, string, boolean?][] = [["outcome", "Outcome"], ["income", "Income"]];
@@ -37,7 +61,7 @@ export const ExpensesNewRecord = (props: Props) => {
                 </div>
                 <div className="flex-row-break"></div>
                 <div className="submit">
-                    <button className="acc-acc-main-button">Add</button>
+                    <button className="acc-acc-main-button" onClick={submit}>Add</button>
                 </div>
             </div>
         </aside>

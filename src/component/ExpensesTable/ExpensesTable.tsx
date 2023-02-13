@@ -1,28 +1,59 @@
-import { IPSUM_LOREM } from 'utils/constants';
-import ExpensesDataTableCell from './ExpensesDataTableCell';
-import ExpensesDateTableCell from './ExpensesDateTableCell';
+import { useEffect } from 'react';
+
+import { Expense } from 'types';
+import ExpenseTableCell from './ExpenseTableCell';
+import DateTableCell from './DateTableCell';
+import { useAppDispatch, useAppSelector } from 'hook';
+import { fetchExpenses } from 'store/reducer/expenses';
 
 import './_expenses-table.scss';
+import React from 'react';
 
-type Props = {}
+export const ExpensesTable = () => {
+    const dispatch = useAppDispatch()
+    const {expenses, fetchError: error, isLoading} = useAppSelector(state => state.expensesReducer)
 
-export const ExpensesTable = (props: Props) => {
-    const randomElement = (arr: Array<any>) => arr[Math.floor(Math.random()*arr.length)]
-    const dummyExpenses = Array(11).fill(0)
-        .map(() => { return {} as Record<string, any> })
-        .map((item) => ({...item, category: randomElement(['Groceries', 'Sport', 'Rent'])}))
-        .map((item) => ({...item, description: IPSUM_LOREM}))
-        .map((item) => ({...item, amount: Math.round(Math.random() * 1000)}))
-        .map((item) => ({...item, expensetype: randomElement(['outcome', 'income'])}))
-        .map((item) => ({...item, currency: 'GEL'}))
-    console.log(dummyExpenses)
+    useEffect(() => {
+        dispatch(fetchExpenses())
+    }, [])
 
-    return (
-        <table className="expenses-table">
-            <ExpensesDateTableCell date={new Date(Date.now())} />
-            { dummyExpenses.map((item) =>
-                <ExpensesDataTableCell category={item.category} description={item.description} amount={item.amount} expenseType={item.expensetype} currency={item.currency} />)
+    const expensesGroupByDate = Object.entries(
+        expenses.reduce((dateGroup, expense) => {
+            const date = expense.date.toISOString().split('T')[0];
+            if (!(date in dateGroup)) {
+                dateGroup[date] = [];
             }
-        </table>
+            dateGroup[date].push(expense);
+            return dateGroup;
+        }, {} as {[date: string]: Expense[]})
+    )
+    .map(([dateString, expensesByDate]) => {
+        const date = new Date(dateString)
+        return (
+            <React.Fragment key={dateString}>
+                <DateTableCell date={date} />
+                { expensesByDate.map((item) =>
+                    <ExpenseTableCell key={item.id} category={item.category} description={item.description} amount={item.amount} expenseType={item.expenseType} currency={item.currency} />
+                )}
+            </React.Fragment>
+        )
+    })
+
+    // TODO: add styling for error, loading and 'no data found'
+    return (
+        <>
+            { error && <h1>{error}</h1> }
+            { isLoading && <h1>loading data...</h1> }
+            { !isLoading && expenses.length > 0
+                ? 
+                    <table className="expenses-table">
+                    <tbody>
+                        { expensesGroupByDate }
+                    </tbody>
+                    </table>
+                :
+                    <h1>No data found</h1>
+            }
+        </>
     )
 }

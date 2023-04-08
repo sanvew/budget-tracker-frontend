@@ -19,7 +19,7 @@ export const ExpensesTable = () => {
 
     const expensesGroupByDate = Object.entries(
         expenses.reduce((dateGroup, expense) => {
-            const date = expense.date.toISOString().split('T')[0];
+            const date = expense.date.toISOString();
             if (!(date in dateGroup)) {
                 dateGroup[date] = [];
             }

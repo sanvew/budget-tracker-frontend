@@ -17,6 +17,11 @@
             width: 100%;
         }
 
+        .required-field {
+            font-size: variables.$xx-small-font-size;
+            color: variables.$red-color;
+        }
+
         .amount {
             flex-basis: 69%;
 

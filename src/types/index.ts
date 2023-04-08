@@ -1,5 +1,1 @@
-import { Expense } from "./expense";
-
-export {
-    type Expense
-}
+export * from "./expense";

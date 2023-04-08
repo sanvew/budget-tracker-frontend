@@ -16,10 +16,10 @@ export const ExpensesFilter = (props: Props) => {
             </div>
             <div className="filter-input">
                 <div className="date-from">
-                    <DateInput placeholder="From" min={new Date('01/01/2023')} />
+                    <DateInput placeholder="From"/>
                 </div>
                 <div className="date-to">
-                    <DateInput placeholder="To" min={new Date('01/01/2023')} />
+                    <DateInput placeholder="To"/>
                 </div>
                 <div className="flex-row-break"></div>
                 <div className="category">
@@ -27,7 +27,7 @@ export const ExpensesFilter = (props: Props) => {
                 </div>
                 <div className="flex-row-break"></div>
                 <div className="type">
-                    <SimpleSelect placeholder="Select type" values={dummyTypes.map(([val, label]) => {return {value: val, label: label}})} />
+                    <SimpleSelect placeholder="Select type" values={dummyTypes.map(([val, label]) => {return {value: val, label: label}})}/>
                 </div>
                 <div className="flex-row-break"></div>
                 <div className="submit">

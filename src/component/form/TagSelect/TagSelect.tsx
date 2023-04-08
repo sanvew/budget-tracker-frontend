@@ -1,17 +1,20 @@
 import { TagifySettings, BaseTagData } from "@yaireo/tagify";
 import Tags from "@yaireo/tagify/dist/react.tagify";
-import { useState } from "react";
+import { useRef } from "react";
 
 type Props = {
+    name?: string,
     mode?: 'multi' | 'select',
-    whitelist?: string[] | (() => string[]),
+    whitelist?: string[],
+    enforceWhitelist?: boolean,
     placeholder?: string,
+    onChange?: (e: CustomEvent<Tagify.ChangeEventData<BaseTagData>>) => void
 }
 
-export const TagSelect = ({ mode = 'multi', placeholder, whitelist }: Props) => {
+export const TagSelect = ({ name, mode = 'multi', placeholder, whitelist, enforceWhitelist = true, onChange }: Props) => {
     const tagifySettings = { 
         useInput: false,
-        enforceWhitelist: true,
+        enforceWhitelist: enforceWhitelist,
         mode: mode === 'multi' ? null : 'select',
         dropdown: {
             enabled: 0,
@@ -19,9 +22,9 @@ export const TagSelect = ({ mode = 'multi', placeholder, whitelist }: Props) => 
         }
     } as TagifySettings<BaseTagData>;
 
-    const [whitelistState, setWhitelist] = useState(whitelist);
+    const tag = useRef<Tagify>()
 
     return (
-        <Tags placeholder={placeholder} settings={tagifySettings} whitelist={whitelistState}/>
+        <Tags tagifyRef={tag} name={name} placeholder={placeholder} settings={tagifySettings} whitelist={whitelist} onChange={onChange}/>
     )
 }

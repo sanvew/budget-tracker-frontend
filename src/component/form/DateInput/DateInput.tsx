@@ -1,15 +1,17 @@
-import { useState, ChangeEvent, FocusEvent } from "react";
+import { DEFAULT_DATE_FORMAT } from "constant";
+import dayjs from "dayjs";
+import { ChangeEvent, FocusEvent } from "react";
 
 type Props = {
     value?: Date,
+    name?: string,
     placeholder?: string,
-    min?: Date,
-    max?: Date,
+    onChange?: (e: ChangeEvent<HTMLInputElement>) => void,
 }
 
-export const DateInput = ({ value, placeholder, min, max }: Props) => {
+export const DateInput = ({ name, value, placeholder, onChange}: Props) => {
 
-    const [date, setDate] = useState<Date | null>(() => value!);
+    const formatDate = (value: Date) => dayjs(value).format(DEFAULT_DATE_FORMAT)
 
     const handleDateFocusIn = (e: FocusEvent<HTMLInputElement>) => {
         e.target.type = 'date';
@@ -20,15 +22,17 @@ export const DateInput = ({ value, placeholder, min, max }: Props) => {
         e.target.type = 'text';
     }
 
-    const handleDateChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setDate(() => e.target.valueAsDate!);
+    const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+        e.currentTarget.value = formatDate(e.target.valueAsDate!)
         e.target.blur();
+        if (onChange != null) {
+            onChange(e)
+        }
     }
 
     return (
-        <input type="text" value={date?.toString()} placeholder={placeholder}
-            min={min?.toDateString()} max={max?.toDateString()}
-            onChange={handleDateChange}
+        <input name={name} type="text" value={value != null ? formatDate(value).toString() : undefined} placeholder={placeholder}
+            onChange={handleOnChange}
             onFocus={handleDateFocusIn}
             onBlur={handleDateFocusOut}
         />

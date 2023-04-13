@@ -1,14 +1,13 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { DefaultPagination, expensesDao } from "db";
-import { Expense } from "types";
+import { expensesDao } from "db";
+import { Expense, ExpenseFilter, Pagination } from "types";
 
 export const fetchExpenses = createAsyncThunk(
     'expenses/fetch',
-    // TODO: add options: pagination, filter etc. 
-    async (_, thunkApi) => {
-        // TODO: choose source of expenses based on settings
+    async (arg: {filter?: ExpenseFilter, page?: Pagination}, thunkApi) => {
+        // TODO: create separate service with source selection based on settings
         try {
-            return expensesDao.getOrderByDate(new DefaultPagination(1)).sortBy('createDate')
+            return expensesDao.getAll(arg.filter, arg.page).sortBy('date')
         } catch (err) {
             thunkApi.rejectWithValue("Unable to fetch expenses")
         }
@@ -18,12 +17,24 @@ export const fetchExpenses = createAsyncThunk(
 export const addExpense = createAsyncThunk(
     'expenses/add',
     async (expense: Expense, thunkApi) => {
-        // TODO: choose source of expenses based on settings
+        // TODO: create separate service with source selection based on settings
         try {
             await expensesDao.save(expense)
             return expense
         } catch (err) {
             thunkApi.rejectWithValue("Unable to add expenses")
+        }
+    }
+)
+
+export const fetchExpensesCount = createAsyncThunk(
+    'expenses/count',
+    async (arg: {filter?: ExpenseFilter}, thunkApi) => {
+        // TODO: create separate service with source selection based on settings
+        try {
+            return expensesDao.count(arg.filter)
+        } catch (err) {
+            thunkApi.rejectWithValue("Unable to count expenses")
         }
     }
 )

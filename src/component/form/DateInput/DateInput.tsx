@@ -11,7 +11,7 @@ type Props = {
 
 export const DateInput = ({ name, value, placeholder, onChange}: Props) => {
 
-    const formatDate = (value: Date) => dayjs(value).format(DEFAULT_DATE_FORMAT)
+    const formatDate = (value: string) => dayjs(value).format(DEFAULT_DATE_FORMAT).toString()
 
     const handleDateFocusIn = (e: FocusEvent<HTMLInputElement>) => {
         e.target.type = 'date';
@@ -23,15 +23,15 @@ export const DateInput = ({ name, value, placeholder, onChange}: Props) => {
     }
 
     const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-        e.currentTarget.value = formatDate(e.target.valueAsDate!)
         e.target.blur();
+        e.target.value = formatDate(e.currentTarget.value)
         if (onChange != null) {
             onChange(e)
         }
     }
 
     return (
-        <input name={name} type="text" value={value != null ? formatDate(value).toString() : undefined} placeholder={placeholder}
+        <input name={name} type="text" defaultValue={value != null ? formatDate(value.toString()) : undefined} placeholder={placeholder}
             onChange={handleOnChange}
             onFocus={handleDateFocusIn}
             onBlur={handleDateFocusOut}

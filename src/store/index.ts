@@ -5,6 +5,7 @@ const rootReducer = combineReducers({
     expensesReducer
 })
 
+
 const store = configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
@@ -13,7 +14,10 @@ const store = configureStore({
                 ignoredActionPaths: [
                     /payload.[0-9]+.date/, /payload.[0-9]+.createDate/, /payload.[0-9]+.updateDate/,
                     'payload.date', 'payload.createDate', 'payload.updateDate',
+                    // 'expenses/add' reducer
                     'meta.arg.date', 'meta.arg.createDate', 'meta.arg.updateDate',
+                    // 'expenses/count' reducer
+                    'meta.arg.filter.fromDate', 'meta.arg.filter.toDate'
                 ],
                 ignoredPaths: [
                     /expensesReducer.expenses.[0-9]+.date/, /expensesReducer.expenses.[0-9]+.createDate/, /expensesReducer.expenses.[0-9]+.updateDate/

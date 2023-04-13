@@ -1,20 +1,20 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
+import { useAppDispatch, useAppSelector } from 'hook';
+import { fetchExpenses } from 'store/reducer/expenses';
 import { Expense } from 'types';
 import ExpenseTableCell from './ExpenseTableCell';
 import DateTableCell from './DateTableCell';
-import { useAppDispatch, useAppSelector } from 'hook';
-import { fetchExpenses } from 'store/reducer/expenses';
 
 import './_expenses-table.scss';
-import React from 'react';
 
 export const ExpensesTable = () => {
     const dispatch = useAppDispatch()
     const {expenses, fetchError: error, isLoading} = useAppSelector(state => state.expensesReducer)
 
     useEffect(() => {
-        dispatch(fetchExpenses())
+        // TODO: add filter based on searchParams
+        dispatch(fetchExpenses({}))
     }, [])
 
     const expensesGroupByDate = Object.entries(

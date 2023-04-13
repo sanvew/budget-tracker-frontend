@@ -1,3 +1,5 @@
+export type ExpenseType = 'outcome' | 'income'
+
 export interface Expense {
     id: string,
     date: Date,
@@ -6,6 +8,6 @@ export interface Expense {
     category: string,
     description: string,
     amount: number,
-    expenseType: 'outcome' | 'income',
+    expenseType: ExpenseType,
     currency: string
 }

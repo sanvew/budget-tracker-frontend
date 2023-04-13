@@ -1,14 +1,23 @@
 import ExpensesTable from 'component/ExpensesTable';
+import { useAppDispatch, useAppSelector } from 'hook';
+import { useEffect } from 'react';
+import { fetchExpensesCount } from 'store/reducer/expenses';
 import './_expenses-list.scss';
 
-type Props = {}
+export const ExpensesList = () => {
+    const dispatch = useAppDispatch()
+    const {totalCount} = useAppSelector(state => state.expensesReducer)
 
-export const ExpensesList = (props: Props) => {
+    useEffect(() => {
+        // TODO: add filter based on searchParams
+        dispatch(fetchExpensesCount({}))
+    }, [])
+
     return (
         <section className="card-main expenses-list">
             <div className="list-heading">
                 <h4>Expenses/Earnings</h4>
-                <h5>Found 15 results</h5>
+                <h5>Found {totalCount} results</h5>
             </div>
             <ExpensesTable/>
             <nav className="expenses-list-paging">

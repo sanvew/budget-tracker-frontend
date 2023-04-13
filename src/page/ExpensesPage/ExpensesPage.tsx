@@ -4,9 +4,7 @@ import ExpensesList from 'component/ExpensesList';
 
 import './_expenses.scss';
 
-type Props = {}
-
-export const ExpensesPage = (props: Props) => {
+export const ExpensesPage = () => {
   return (
     <main className='layout-expenses'>
         <ExpensesFilter/>

@@ -1,23 +1,7 @@
 import dayjs from "dayjs";
 import Dexie, { Collection } from "dexie";
 
-import { Expense } from "types";
-
-interface Paginataion {
-    pageNum: number,
-    pageSize: number,
-}
-
-class DefaultPagination implements Paginataion {
-    static readonly PAGE_SIZE = 15;
-    pageNum: number;
-    pageSize: number;
-
-    constructor(pageNum: number, pageSize?: number) {
-        this.pageNum = pageNum;
-        this.pageSize = pageSize !== undefined ? pageSize : DefaultPagination.PAGE_SIZE;
-    }
-}
+import { Expense, ExpenseFilter, Pagination } from "types";
 
 class BudgetTrackingDB extends Dexie {
     static readonly #DB_NAME = 'budgetTracking';
@@ -42,67 +26,53 @@ class ExpenseDao {
         await this.#db.expenses.add(expense)
     }
 
-    getOrderByDate(page?: Paginataion): Collection<Expense, string> {
-        let result: Collection<Expense, string>;
-        if (page !== undefined) {
-            result = this.#db.expenses.orderBy('date').offset((page.pageNum - 1) * (page.pageSize - 1)).limit(page.pageSize);
-        } else {
-            result = this.#db.expenses.orderBy('date');
-        }
-        return result;
+    getOrderByDate(page?: Pagination): Collection<Expense, string> {
+        return page != null ? this.#pagination(this.#db.expenses.orderBy('date'), page) : this.#db.expenses.toCollection()
     }
 
-    getOrderByDateBetween(startDate?: Date, endDate?: Date, page?: Paginataion): Collection<Expense, string> | undefined{
-        let result: Collection<Expense, string> | undefined;
-        if (startDate !== undefined && endDate !== undefined) {
+    getAll(expenseFilter?: ExpenseFilter, page?: Pagination): Collection<Expense, string> {
+        let result: Collection<Expense, string> = this.#db.expenses.toCollection()
+        if (expenseFilter != null) {
+            if (expenseFilter.fromDate != null || expenseFilter.toDate != null) {
+                result = this.#filteredByDate(expenseFilter.fromDate, expenseFilter.toDate)
+            }
+            if (expenseFilter.categories != null) {
+                result = result.filter(val => expenseFilter.categories!.includes(val.category))
+            }
+            if (expenseFilter.expenseType != null && expenseFilter.expenseType !== 'all') {
+                result = result.filter(val => val.expenseType === expenseFilter.expenseType)
+            }
+        } else {
+            result = this.#db.expenses.orderBy('date')
+        }
+        return page != null ? this.#pagination(result, page) : result
+    }
+
+    async count(expenseFilter?: ExpenseFilter): Promise<number> {
+        return this.getAll(expenseFilter).count() as Promise<number>;
+    }
+
+    #pagination(collection: Collection<Expense, string>, page: Pagination) {
+        return collection.offset((page.pageNum - 1) * (page.pageSize - 1)).limit(page.pageSize)
+    }
+
+    #filteredByDate(startDate?: Date, endDate?: Date): Collection<Expense, string> {
+        let result: Collection<Expense, string> = this.#db.expenses.toCollection()
+        if (startDate != null && endDate != null) {
             if (dayjs(startDate).isSameOrBefore(dayjs(endDate), 'date')) {
-                result = this.#db.expenses.where('date').between(endDate, startDate, true, true)
+                result = this.#db.expenses.where('date').between(startDate, endDate, true, true)
             } else {
                 throw new Error(`Invalid dates passed: 'startDate(${startDate})' isn't before 'endDate(${endDate})'`)
             }
-        } else if (startDate !== undefined) {
+        } else if (startDate != null) {
             result = this.#db.expenses.where('date').aboveOrEqual(startDate)
-        } else if (endDate !== undefined) {
+        } else if (endDate != null) {
             result = this.#db.expenses.where('date').belowOrEqual(endDate)
         }
-        if (result !== undefined && page !== undefined) {
-            result = result.offset(page.pageNum * page.pageSize).limit(page.pageSize)
-        }
-        return result;
-    }
-
-    async count(startDate?: Date, endDate?: Date): Promise<number> {
-        let result;
-        if (startDate !== undefined && endDate !== undefined) {
-            if (dayjs(startDate).isSameOrBefore(dayjs(endDate), 'date')) {
-                result = this.#db.expenses.where('date').between(endDate, startDate, true, true).count()
-            } else {
-                throw new Error(`Invalid dates passed: 'startDate(${startDate})' isn't before 'endDate(${endDate})'`)
-            }
-        } else if (startDate !== undefined) {
-            result = this.#db.expenses.where('date').aboveOrEqual(startDate).count()
-        } else if (endDate !== undefined) {
-            result = this.#db.expenses.where('date').belowOrEqual(endDate).count()
-        } else {
-            result = this.#db.expenses.count();
-        }
-        return result as Promise<number>;
-    }
+        return result
+    } 
 }
 
 const appIndexedDB = new BudgetTrackingDB();
 
-const expensesDao = new ExpenseDao(appIndexedDB);
-
-export {
-    DefaultPagination,
-    BudgetTrackingDB,
-    ExpenseDao,
-    appIndexedDB,
-    expensesDao
-};
-
-export type {
-    Paginataion
-};
-
+export const expensesDao = new ExpenseDao(appIndexedDB);

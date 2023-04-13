@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { Expense } from "types";
-import { addExpense, fetchExpenses } from "./expenses_actions";
+import { addExpense, fetchExpenses, fetchExpensesCount } from "./expenses_actions";
 
 type ExpensesState = {
     expenses: Expense[],
+    totalCount: number,
     isLoading: boolean,
     fetchError?: string,
     addError?: string | boolean,
@@ -12,6 +13,7 @@ type ExpensesState = {
 
 const initialState: ExpensesState = {
     expenses: [],
+    totalCount: 0,
     isLoading: false,
 } 
 
@@ -39,6 +41,13 @@ const expensesReducer = createSlice({
                 })
                 .addCase(addExpense.rejected.type, (state, action: PayloadAction<string>) => {
                     state.addError = action.payload;
+                })
+            builder
+                .addCase(fetchExpensesCount.fulfilled.type, (state, action: PayloadAction<number>) => {
+                    state.totalCount = action.payload
+                })
+                .addCase(fetchExpensesCount.rejected.type, (state, action: PayloadAction<string>) => {
+                    state.totalCount = NaN
                 })
         },
 })

@@ -6,8 +6,10 @@ import { Provider } from 'react-redux';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isBetween from 'dayjs/plugin/isBetween'
 
 import App from 'page/App';
 import { store } from 'store';
@@ -19,6 +21,8 @@ dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.extend(customParseFormat)
 dayjs.extend(isSameOrBefore)
+dayjs.extend(isSameOrAfter)
+dayjs.extend(isBetween)
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

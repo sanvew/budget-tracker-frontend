@@ -1,17 +1,9 @@
 import ExpensesTable from 'component/ExpensesTable';
-import { useAppDispatch, useAppSelector } from 'hook';
-import { useEffect } from 'react';
-import { fetchExpensesCount } from 'store/reducer/expenses';
+import { useAppSelector } from 'hook';
 import './_expenses-list.scss';
 
 export const ExpensesList = () => {
-    const dispatch = useAppDispatch()
     const {totalCount} = useAppSelector(state => state.expensesReducer)
-
-    useEffect(() => {
-        // TODO: add filter based on searchParams
-        dispatch(fetchExpensesCount({}))
-    }, [])
 
     return (
         <section className="card-main expenses-list">

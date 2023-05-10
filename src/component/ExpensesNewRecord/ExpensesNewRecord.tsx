@@ -1,14 +1,14 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
+import DatePicker from 'react-datepicker'
 import dayjs from 'dayjs';
-import { BaseTagData } from "@yaireo/tagify";
 
-import { DEFAULT_DATE_FORMAT } from 'constant';
 import { useAppDispatch } from 'hook';
 import { addExpense } from 'store/reducer/expenses';
-import { DateInput, TagSelect, SimpleSelect } from 'component/form';
-import { Expense } from 'types';
+import { TagSelect, SimpleSelect } from 'component/form';
+import { Expense, ExpenseType } from 'types';
 
 import './_expenses-new-record.scss';
+import { DATEPICKER_INPUT_DATE_FORMAT } from 'constant';
 
 type ExpensesRequiredFields = {
     [Key in keyof Omit<Expense, 'id' | 'createDate' | 'updateDate'>]: boolean;
@@ -18,33 +18,39 @@ export const ExpensesNewRecord = () => {
     const dispatch = useAppDispatch()
 
     const [requiredFields, setRequiredFields] = useState<ExpensesRequiredFields>({} as ExpensesRequiredFields)
+    const [date, setDate] = useState<Date>(new Date())
+    const [amount, setAmount] = useState<number>()
+    const [currency, setCurrency] = useState<string>()
+    const [category, setCategory] = useState<string[]>()
+    const [expenseType, setExpenseType] = useState<string>('outcome' as ExpenseType)
+    const [description, setDescription] = useState<string>()
 
-    const validateInput = (formData: FormData): boolean => {
+    const validateInput = (): boolean => {
         let isValid = true
         let reqFields: ExpensesRequiredFields = {} as ExpensesRequiredFields
 
-        if (!formData.has('date') && !dayjs(formData.get('date')?.toString()).isValid()) {
+        if (!dayjs(date).isValid()) {
             reqFields.date = true
             isValid = false
         }
-        if (!formData.has('amount') || isNaN(parseFloat(formData.get('amount')!.toString()))) {
+        if (isNaN(amount!)) {
             reqFields.amount = true
             isValid = false
         }
         // TODO: check for valid currency
-        if (!formData.has('currency') || formData.get('currency') === '') {
+        if (currency == null || currency === '') {
             reqFields.currency = true
             isValid = false
         }
-        if (!formData.has('category') || formData.get('category') === '') {
+        if (category == null) {
             reqFields.category = true
             isValid = false
         }
-        if (!formData.has('expenseType') || !['outcome', 'income'].includes(formData.get('expenseType') as string)) {
+        if (expenseType == null || !['outcome', 'income'].includes(expenseType)) {
             reqFields.expenseType = true
             isValid = false
         }
-        if (!formData.has('description') || formData.get('description') === '') {
+        if (description == null || description === '') {
             reqFields.description = true
             isValid = false
         }
@@ -56,58 +62,34 @@ export const ExpensesNewRecord = () => {
         return isValid
     }
 
-    const formDataToExpenseRecord = (formData: FormData): Expense => {
+    const createExpenseRecord = (): Expense => {
         return {
             id: crypto.randomUUID(),
-            date: dayjs(formData.get('date')!.toString(), DEFAULT_DATE_FORMAT).toDate(),
+            date: date,
             createDate: new Date(),
             updateDate: new Date(),
-            category: JSON.parse(formData.get('category')!.toString())[0]['value'],
-            description: formData.get('description')!.toString(),
-            amount: Number(formData.get('amount')!.toString()),
-            expenseType: formData.get('expenseType')!.toString() === 'outcome' ? 'outcome' : 'income',
-            currency: formData.get('currency')!.toString()
+            category: category![0],
+            description: description!,
+            amount: amount!,
+            expenseType: expenseType! as ExpenseType,
+            currency: currency!
         }
     }
 
     // Form input handlers
     const handleChangeAmount = (e: ChangeEvent<HTMLInputElement>) => {
-        const val = e.currentTarget.value
-        setRequiredFields(prevState => ({
-            ...prevState,
-            amount: isNaN(parseFloat(val))
-        }))
-    }
-
-    const handleChangeCurrency = (e: ChangeEvent<HTMLSelectElement>) => {
-        const val = e.currentTarget.value
-        setRequiredFields(prevState => ({
-            ...prevState,
-            currency: val === ''
-        }))
-    }
-
-    const handleChangeCategory = (e: CustomEvent<Tagify.ChangeEventData<BaseTagData>>) => {
-        setRequiredFields(prevState => ({
-            ...prevState,
-            category: e.detail.value === ''
-        }))
+        setAmount(parseFloat(e.currentTarget.value))
     }
 
     const handleChangeDescription = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        const val = e.currentTarget.value
-        setRequiredFields(prevState => ({
-            ...prevState,
-            description: val === ''
-        }))
+        setDescription(e.currentTarget.value)
     }
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        const formData = new FormData(e.currentTarget)
-        if (validateInput(formData)) {
+        if (validateInput()) {
             // TODO: add toast message for new record 
-            dispatch(addExpense(formDataToExpenseRecord(formData)))
+            dispatch(addExpense(createExpenseRecord()))
         } else {
             // TODO: add error toast message
             window.alert('Some fields not valid')
@@ -119,33 +101,37 @@ export const ExpensesNewRecord = () => {
     // TODO: create separate table 
     const dummyCategories = ["groceries", "sport", "transport"];
 
-    const expenseTypes: [string, string, boolean?][] = [["outcome", "Outcome", true], ["income", "Income"]];
+    const expenseTypes: [ExpenseType, string][] = [["outcome", "Outcome"], ["income", "Income"]];
     
     return (
         <aside className='card-main expenses-new-record'>
             <h4>New record</h4>
             <form className="new-record-input" onSubmit={handleSubmit}>
                 <div className="date">
-                    <DateInput name='date' value={new Date()} placeholder="Date"/>
+                    <DatePicker selected={date}
+                        onChange={date => setDate(date ?? new Date())}
+                        placeholderText='Date' 
+                        dateFormat={DATEPICKER_INPUT_DATE_FORMAT}
+                    />
                     <span className='required-field' hidden={!requiredFields.date}>*must be filled</span>
                 </div>
                 <div className="flex-row-break"></div>
                 <div className="amount">
-                    <input name='amount' type="number" placeholder="Amount" onChange={handleChangeAmount}/>
+                    <input type="number" step="0.01" placeholder="Amount" onChange={handleChangeAmount}/>
                     <span className='required-field' hidden={!requiredFields.amount}>*must be filled</span>
                 </div>
                 <div className="currency">
-                    <SimpleSelect name='currency' placeholder="CUR" values={dummyCurrencies.map(val => {return {value: val, label: val}})} onChange={handleChangeCurrency}/>
+                    <SimpleSelect placeholder="CUR" value={currency} onChange={setCurrency} options={dummyCurrencies.map(val => {return {value: val, label: val}})}/>
                     <span className='required-field' hidden={!requiredFields.currency}>*must be filled</span>
                 </div>
                 <div className="flex-row-break"></div>
                 <div className="category">
-                    <TagSelect name='category' placeholder='Select category' enforceWhitelist={false} whitelist={dummyCategories} mode='select' onChange={handleChangeCategory}/>
+                    <TagSelect placeholder='Select category' value={category} onChange={setCategory} enforceWhitelist={false} whitelist={dummyCategories} mode='select'/>
                     <span className='required-field' hidden={!requiredFields.category}>*must be filled</span>
                 </div>
                 <div className="flex-row-break"></div>
                 <div className="type">
-                    <SimpleSelect name='expenseType' values={expenseTypes.map(([val, label, sel]) => {return {value: val, label: label, selected: sel}})}/>
+                    <SimpleSelect value={expenseType} onChange={setExpenseType} options={expenseTypes.map(([value, label]) => {return {value, label}})}/>
                     <span className='required-field' hidden={!requiredFields.expenseType}>*must be filled</span>
                 </div>
                 <div className="flex-row-break"></div>

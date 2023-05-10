@@ -39,6 +39,20 @@ input {
     }
 }
 
+// TODO: datepicker: customize clear button to fit the overall design
+.react-datepicker-popper {
+    z-index: 2;
+}
+
+.react-datepicker {
+    font-size: 0.5rem;
+
+    .react-datepicker__day-name, .react-datepicker__day, .react-datepicker__time-name {
+        width: 1rem;
+        line-height: 1rem;
+    }
+}
+
 .tagify {
     --tag-pad: 0;
     --tag-border-radius: #{variables.$default-border-radius};

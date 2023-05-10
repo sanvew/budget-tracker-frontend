@@ -1,16 +1,15 @@
 import Header from 'component/Header';
 import Footer from 'component/Footer';
-import ExpensesPage from 'page/ExpensesPage';
+import { Outlet } from 'react-router-dom';
 
-// TODO: reorganize and rename pages
-const App = () => {
+const Root = () => {
   return (
     <>
       <Header />
-      <ExpensesPage />
+      <Outlet/>
       <Footer />
     </>
   )
 }
 
-export default App;
+export default Root;

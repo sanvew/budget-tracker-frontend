@@ -1,25 +1,20 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import dayjs from 'dayjs';
 
-import { useAppDispatch, useAppSelector } from 'hook';
-import { fetchExpenses } from 'store/reducer/expenses';
-import { Expense } from 'types';
 import ExpenseTableCell from './ExpenseTableCell';
 import DateTableCell from './DateTableCell';
+import { useAppSelector } from 'hook';
+import { Expense } from 'types';
+import { DEFAULT_DATE_FORMAT } from 'constant';
 
 import './_expenses-table.scss';
 
 export const ExpensesTable = () => {
-    const dispatch = useAppDispatch()
     const {expenses, fetchError: error, isLoading} = useAppSelector(state => state.expensesReducer)
-
-    useEffect(() => {
-        // TODO: add filter based on searchParams
-        dispatch(fetchExpenses({}))
-    }, [])
 
     const expensesGroupByDate = Object.entries(
         expenses.reduce((dateGroup, expense) => {
-            const date = expense.date.toISOString();
+            const date = dayjs(expense.date).format(DEFAULT_DATE_FORMAT);
             if (!(date in dateGroup)) {
                 dateGroup[date] = [];
             }
@@ -28,12 +23,12 @@ export const ExpensesTable = () => {
         }, {} as {[date: string]: Expense[]})
     )
     .map(([dateString, expensesByDate]) => {
-        const date = new Date(dateString)
+        const date = dayjs(dateString, DEFAULT_DATE_FORMAT).toDate()
         return (
             <React.Fragment key={dateString}>
-                <DateTableCell date={date} />
+                <DateTableCell date={date}/>
                 { expensesByDate.map((item) =>
-                    <ExpenseTableCell key={item.id} category={item.category} description={item.description} amount={item.amount} expenseType={item.expenseType} currency={item.currency} />
+                    <ExpenseTableCell key={item.id} category={item.category} description={item.description} amount={item.amount} expenseType={item.expenseType} currency={item.currency}/>
                 )}
             </React.Fragment>
         )

@@ -1,23 +1,25 @@
 import { ChangeEvent } from "react"
+import { BaseInputProps } from "types"
 
 type Entry = {
     value: string,
     label: string,
-    selected?: boolean, 
 }
 
-type Props = {
-    values: Entry[],
-    name?: string,
+type Props = BaseInputProps<string> & {
+    options: Entry[],
     placeholder?: string,
-    onChange?: (e: ChangeEvent<HTMLSelectElement>) => void
 }
 
-export const SimpleSelect = ({ values, name, placeholder, onChange }: Props) => {
+export const SimpleSelect = ({ value, onChange, options, placeholder }: Props) => {
+    const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+        onChange(e.currentTarget.value)
+    }
+
     return (
-        <select name={name} onChange={onChange}>
-            { placeholder ? <option value="" disabled selected>{placeholder}</option> : '' }
-            { values.map(({value, label, selected}) => { return <option value={value} selected={selected}>{label}</option> }) }
+        <select value={value ?? ''} onChange={handleChange}>
+            { placeholder ? <option value="" disabled>{placeholder}</option> : '' }
+            { options.map(({value, label}) => <option value={value} key={value}>{label}</option>) }
         </select>
     )
 } 

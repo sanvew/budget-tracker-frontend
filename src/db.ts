@@ -36,7 +36,7 @@ class ExpenseDao {
             if (expenseFilter.fromDate != null || expenseFilter.toDate != null) {
                 result = this.#filteredByDate(expenseFilter.fromDate, expenseFilter.toDate)
             }
-            if (expenseFilter.categories != null) {
+            if (expenseFilter.categories != null && expenseFilter.categories.length !== 0 ) {
                 result = result.filter(val => expenseFilter.categories!.includes(val.category))
             }
             if (expenseFilter.expenseType != null && expenseFilter.expenseType !== 'all') {
@@ -45,6 +45,7 @@ class ExpenseDao {
         } else {
             result = this.#db.expenses.orderBy('date')
         }
+        result = result.reverse()
         return page != null ? this.#pagination(result, page) : result
     }
 
@@ -60,14 +61,18 @@ class ExpenseDao {
         let result: Collection<Expense, string> = this.#db.expenses.toCollection()
         if (startDate != null && endDate != null) {
             if (dayjs(startDate).isSameOrBefore(dayjs(endDate), 'date')) {
-                result = this.#db.expenses.where('date').between(startDate, endDate, true, true)
+                result = this.#db.expenses.where('date').between(
+                    dayjs(startDate).startOf('day').toDate(),
+                    dayjs(endDate).endOf('day').toDate(),
+                    true, true
+                )
             } else {
                 throw new Error(`Invalid dates passed: 'startDate(${startDate})' isn't before 'endDate(${endDate})'`)
             }
         } else if (startDate != null) {
-            result = this.#db.expenses.where('date').aboveOrEqual(startDate)
+            result = this.#db.expenses.where('date').aboveOrEqual(dayjs(startDate).startOf('day').toDate())
         } else if (endDate != null) {
-            result = this.#db.expenses.where('date').belowOrEqual(endDate)
+            result = this.#db.expenses.where('date').belowOrEqual(dayjs(endDate).endOf('day').toDate())
         }
         return result
     } 

@@ -36,7 +36,7 @@ const expensesReducer = createSlice({
                 })
             builder
                 .addCase(addExpense.fulfilled.type, (state, action: PayloadAction<Expense>) => {
-                    state.expenses.push(action.payload);
+                    state.expenses.unshift(action.payload);
                     state.addError = false;
                 })
                 .addCase(addExpense.rejected.type, (state, action: PayloadAction<string>) => {
@@ -46,7 +46,7 @@ const expensesReducer = createSlice({
                 .addCase(fetchExpensesCount.fulfilled.type, (state, action: PayloadAction<number>) => {
                     state.totalCount = action.payload
                 })
-                .addCase(fetchExpensesCount.rejected.type, (state, action: PayloadAction<string>) => {
+                .addCase(fetchExpensesCount.rejected.type, (state) => {
                     state.totalCount = NaN
                 })
         },

@@ -28,7 +28,10 @@ export const ExpensesTable = () => {
             <React.Fragment key={dateString}>
                 <DateTableCell date={date}/>
                 { expensesByDate.map((item) =>
-                    <ExpenseTableCell key={item.id} category={item.category} description={item.description} amount={item.amount} expenseType={item.expenseType} currency={item.currency}/>
+                    <ExpenseTableCell 
+                        key={item.id} category={item.category} description={item.description} amount={item.amount} 
+                        expenseType={item.expenseType} currency={item.currency}
+                    />
                 )}
             </React.Fragment>
         )

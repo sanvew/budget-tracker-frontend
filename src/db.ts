@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import Dexie, { Collection } from "dexie";
 
-import { Expense, ExpenseFilter, Pagination } from "types";
+import { EMPTY_FILTER, Expense, ExpenseFilter, isEqualsExpenseFilter, Pagination } from "types";
 
 class BudgetTrackingDB extends Dexie {
     static readonly #DB_NAME = 'budgetTracking';
@@ -27,12 +27,14 @@ class ExpenseDao {
     }
 
     getOrderByDate(page?: Pagination): Collection<Expense, string> {
-        return page != null ? this.#pagination(this.#db.expenses.orderBy('date'), page) : this.#db.expenses.toCollection()
+        return page != null
+            ? this.#pagination(this.#db.expenses.orderBy('date'), page)
+            : this.#db.expenses.toCollection()
     }
 
     getAll(expenseFilter?: ExpenseFilter, page?: Pagination): Collection<Expense, string> {
         let result: Collection<Expense, string> = this.#db.expenses.toCollection()
-        if (expenseFilter != null) {
+        if (expenseFilter != null && !isEqualsExpenseFilter(expenseFilter, EMPTY_FILTER)) {
             if (expenseFilter.fromDate != null || expenseFilter.toDate != null) {
                 result = this.#filteredByDate(expenseFilter.fromDate, expenseFilter.toDate)
             }
@@ -79,5 +81,4 @@ class ExpenseDao {
 }
 
 const appIndexedDB = new BudgetTrackingDB();
-
 export const expensesDao = new ExpenseDao(appIndexedDB);

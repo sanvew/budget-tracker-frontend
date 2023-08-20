@@ -27,11 +27,11 @@ dayjs.extend(isBetween)
 
 const router = createHashRouter([
     {
-        path: "./",
+        path: "/",
         element: <Root />,
         children: [
             {
-                path: '.',
+                path: '/',
                 element: <ExpensesPage />
             }
         ]

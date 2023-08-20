@@ -13,20 +13,20 @@
     },
     "eslintConfig": {
         "extends": [
-        "react-app",
-        "react-app/jest"
+            "react-app",
+            "react-app/jest"
         ]
     },
     "browserslist": {
         "production": [
-        ">0.2%",
-        "not dead",
-        "not op_mini all"
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
         ],
         "development": [
-        "last 1 chrome version",
-        "last 1 firefox version",
-        "last 1 safari version"
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
         ]
     },
     "dependencies": {
@@ -37,6 +37,7 @@
         "@yaireo/tagify": "^4.17.7",
         "dayjs": "^1.11.7",
         "dexie": "^3.2.3",
+        "lodash": "^4.17.21",
         "prop-types": "^15.8.1",
         "react": "^18.2.0",
         "react-datepicker": "^4.11.0",
@@ -47,6 +48,7 @@
         "typescript": "^4.9.5"
     },
     "devDependencies": {
+        "@types/lodash": "^4.14.197",
         "@types/node": "^18.15.0",
         "@types/react": "^18.0.28",
         "@types/react-datepicker": "^4.11.2",

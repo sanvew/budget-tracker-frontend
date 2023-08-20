@@ -68,6 +68,14 @@
     &.pressed {
         background-color: $act-bg-color;
         border: 3px solid $act-border-color;
+        cursor: default;
+    }
+    &.disabled {
+        cursor: default;
+
+        &:hover {
+            background-color: transparent;
+        }
     }
 }
 

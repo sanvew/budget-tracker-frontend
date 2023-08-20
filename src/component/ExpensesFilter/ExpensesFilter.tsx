@@ -4,33 +4,31 @@ import DatePicker from 'react-datepicker'
 import dayjs from 'dayjs';
 
 import { TagSelect, SimpleSelect } from 'component/form';
-import { useAppDispatch } from 'hook';
-import { fetchExpenses, fetchExpensesCount } from 'store/reducer/expenses';
-import { DATEPICKER_INPUT_DATE_FORMAT, QUERY_PARAM_DATE_FORMAT } from 'constant';
-import { ExpenseFilter, FilterExpenseType } from 'types';
+import { useAppDispatch, useAppSelector } from 'hook';
+import { fetchExpenses } from 'store/reducer/expenses';
+import { DATEPICKER_INPUT_DATE_FORMAT } from 'constant';
+import { ExpensesPagination, ExpenseFilter, FilterExpenseType, expenseFilterToSearchParams } from 'types';
 
 import './_expenses-filter.scss';
-import { formatDate, parseDate } from 'utils/date';
 
 export const ExpensesFilter = () => {
     const dispatch = useAppDispatch()
 
-    const [searchParams, setSearchParams] = useSearchParams();
+    const {filter} = useAppSelector(state => state.expensesReducer)
+    const [, setSearchParams] = useSearchParams();
     const [fromDate, setFromDate] = useState<Date>()
     const [toDate, setToDate] = useState<Date>()
     const [categories, setCategories] = useState<string[]>()
     const [expenseType, setExpenseType] = useState<string>()
 
     useEffect(() => {
-        const expensesFilter = searchParamsToExpenseFilter(searchParams)
-
-        setFromDate(expensesFilter.fromDate)
-        setToDate(expensesFilter.toDate)
-        setCategories(expensesFilter.categories)
-        setExpenseType(expensesFilter.expenseType)
-        
-        applyFilter(expensesFilter)
-    }, [])
+        if (filter != null) {
+            setFromDate(filter.fromDate)
+            setToDate(filter.toDate)
+            setCategories(filter.categories)
+            setExpenseType(filter.expenseType)
+        }
+    }, [filter])
 
     const validateInput = (): boolean => {
         let isValid = true
@@ -61,52 +59,11 @@ export const ExpensesFilter = () => {
     }
 
     const applyFilter = (expenseFilter?: ExpenseFilter) => {
-        dispatch(fetchExpenses({filter: expenseFilter}))
-        dispatch(fetchExpensesCount({filter: expenseFilter}));
-    }
-
-    const searchParamsToExpenseFilter = (searchParams: URLSearchParams): ExpenseFilter => {
-        return {
-            fromDate: (searchParams.has('from') && searchParams.get('from') !== '') ? parseDate(searchParams.get('from')?.toString()!, QUERY_PARAM_DATE_FORMAT) : undefined,
-            toDate: (searchParams.has('to') && searchParams.get('to') !== '') ? parseDate(searchParams.get('to')?.toString()!, QUERY_PARAM_DATE_FORMAT) : undefined,
-            categories: (searchParams.has('category') && searchParams.get('category') !== '')
-                ? (searchParams.get('category')!.toString().split(','))
-                : undefined,
-            expenseType: searchParams.has('type') ? searchParams.get('type')!.toString() as FilterExpenseType : undefined
-        }
+        dispatch(fetchExpenses({filter: expenseFilter, page: new ExpensesPagination(1)}))
     }
 
     const updateSearchParamsWithExpenseFilter = (expenseFilter?: ExpenseFilter): void => {
-        setSearchParams(prev => {
-            if (expenseFilter) {
-                if (expenseFilter.fromDate != null) {
-                    prev.set('from', formatDate(expenseFilter.fromDate, QUERY_PARAM_DATE_FORMAT))
-                } else {
-                    prev.delete('from')
-                }
-                if (expenseFilter.toDate != null) {
-                    prev.set('to', formatDate(expenseFilter.toDate, QUERY_PARAM_DATE_FORMAT))
-                } else {
-                    prev.delete('to')
-                }
-                if (expenseFilter.categories != null && expenseFilter.categories.length !== 0) {
-                    prev.set('category', expenseFilter.categories.join(','))
-                } else {
-                    prev.delete('category')
-                }
-                if (expenseFilter.expenseType != null) {
-                    prev.set('type', expenseFilter.expenseType)
-                } else {
-                    prev.delete('type')
-                }
-            } else {
-                prev.delete('from')
-                prev.delete('to')
-                prev.delete('category')
-                prev.delete('type')
-            }
-            return prev
-        })
+        setSearchParams(prev => expenseFilterToSearchParams(prev, expenseFilter))
     }
 
     // Form input handlers

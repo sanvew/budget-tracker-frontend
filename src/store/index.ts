@@ -5,20 +5,20 @@ const rootReducer = combineReducers({
     expensesReducer
 })
 
-
 const store = configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
             serializableCheck: {
                 ignoredActionPaths: [
-                    /payload.[0-9]+.date/, /payload.[0-9]+.createDate/, /payload.[0-9]+.updateDate/,
-                    'payload.date', 'payload.createDate', 'payload.updateDate',
-                    'meta.arg.date', 'meta.arg.createDate', 'meta.arg.updateDate',
-                    'meta.arg.filter.fromDate', 'meta.arg.filter.toDate'
+                    /payload.expenses.[0-9]+.date/, /payload.expenses.[0-9]+.createDate/,
+                    /payload.expenses.[0-9]+.updateDate/, 'payload.page', 'payload.date', 'payload.createDate',
+                    'payload.updateDate', 'meta.arg.date', 'meta.arg.createDate', 'meta.arg.updateDate',
+                    'meta.arg.filter.fromDate', 'meta.arg.filter.toDate', 'meta.arg.page',
                 ],
                 ignoredPaths: [
-                    /expensesReducer.expenses.[0-9]+.date/, /expensesReducer.expenses.[0-9]+.createDate/, /expensesReducer.expenses.[0-9]+.updateDate/
+                    /expensesReducer.expenses.[0-9]+.date/, /expensesReducer.expenses.[0-9]+.createDate/,
+                    /expensesReducer.expenses.[0-9]+.updateDate/, 'expensesReducer.page'
                 ],
             },
         }),

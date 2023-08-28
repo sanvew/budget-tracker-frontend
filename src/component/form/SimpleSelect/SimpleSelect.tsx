@@ -11,13 +11,13 @@ type Props = BaseInputProps<string> & {
     placeholder?: string,
 }
 
-export const SimpleSelect = ({ value, onChange, options, placeholder }: Props) => {
+export const SimpleSelect = ({ value, onChange, disabled, options, placeholder }: Props) => {
     const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
         onChange(e.currentTarget.value)
     }
 
     return (
-        <select value={value ?? ''} onChange={handleChange}>
+        <select value={value ?? ''} onChange={handleChange} disabled={disabled}>
             { placeholder ? <option value="" disabled>{placeholder}</option> : '' }
             { options.map(({value, label}) => <option value={value} key={value}>{label}</option>) }
         </select>

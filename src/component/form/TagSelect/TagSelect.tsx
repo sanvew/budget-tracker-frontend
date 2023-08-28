@@ -1,5 +1,6 @@
 import { TagifySettings, BaseTagData } from "@yaireo/tagify";
 import Tags from "@yaireo/tagify/dist/react.tagify";
+import { useEffect, useRef } from "react";
 import { BaseInputProps } from "types";
 
 type Props = BaseInputProps<string[]> & {
@@ -9,17 +10,18 @@ type Props = BaseInputProps<string[]> & {
     placeholder?: string,
 }
 
-export const TagSelect = ({ value, onChange, mode = 'multi', placeholder, whitelist, enforceWhitelist = true }: Props) => {
-    const tagifySettings = { 
-        useInput: false,
+export const TagSelect = (
+    { value, onChange, disabled = false, mode = 'multi', placeholder, whitelist, enforceWhitelist = true }: Props
+) => {
+    const defaultTagifySettings: TagifySettings<BaseTagData> = { 
         enforceWhitelist: enforceWhitelist,
         mode: mode === 'multi' ? null : 'select',
         dropdown: {
             enabled: 0,
             closeOnSelect: true
         }
-    } as TagifySettings<BaseTagData>;
-
+    }
+    
     const handleChange = (e: CustomEvent<Tagify.ChangeEventData<BaseTagData>>) => {
         onChange(
             e.detail.tagify.value.reduce((acc, val) => {
@@ -30,6 +32,9 @@ export const TagSelect = ({ value, onChange, mode = 'multi', placeholder, whitel
     }
 
     return (
-        <Tags value={value} placeholder={placeholder} settings={tagifySettings} whitelist={whitelist} onChange={handleChange}/>
+        <Tags
+            readOnly={disabled} value={value} placeholder={placeholder} settings={defaultTagifySettings} whitelist={whitelist}
+            onChange={handleChange} 
+        />
     )
 }

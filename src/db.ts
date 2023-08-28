@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import Dexie, { Collection } from "dexie";
 
-import { EMPTY_FILTER, Expense, ExpenseFilter, isEqualsExpenseFilter, Pagination } from "types";
+import { EMPTY_FILTER, Expense, ExpenseFilter, ExpenseUpdates, isExpenseFilterEqual, Pagination } from "types";
 
 class BudgetTrackingDB extends Dexie {
     static readonly #DB_NAME = 'budgetTracking';
@@ -17,7 +17,7 @@ class BudgetTrackingDB extends Dexie {
 }
 
 class ExpenseDao {
-    #db: BudgetTrackingDB
+    readonly #db: BudgetTrackingDB
     constructor(db: BudgetTrackingDB) {
         this.#db = db
     }
@@ -34,7 +34,7 @@ class ExpenseDao {
 
     getAll(expenseFilter?: ExpenseFilter, page?: Pagination): Collection<Expense, string> {
         let result: Collection<Expense, string> = this.#db.expenses.toCollection()
-        if (expenseFilter != null && !isEqualsExpenseFilter(expenseFilter, EMPTY_FILTER)) {
+        if (expenseFilter != null && !isExpenseFilterEqual(expenseFilter, EMPTY_FILTER)) {
             if (expenseFilter.fromDate != null || expenseFilter.toDate != null) {
                 result = this.#filteredByDate(expenseFilter.fromDate, expenseFilter.toDate)
             }
@@ -49,6 +49,18 @@ class ExpenseDao {
         }
         result = result.reverse()
         return page != null ? this.#pagination(result, page) : result
+    }
+
+    async getById(expenseId: string): Promise<Expense | undefined> {
+        return await this.#db.expenses.get(expenseId)
+    }
+
+    async update(expenseId: string, expenseUpdates: ExpenseUpdates): Promise<number> {
+        return await this.#db.expenses.update(expenseId, {...expenseUpdates, updateDate: new Date()})
+    }
+
+    async remove(expenseId: string): Promise<void> {
+        await this.#db.expenses.delete(expenseId)
     }
 
     async count(expenseFilter?: ExpenseFilter): Promise<number> {

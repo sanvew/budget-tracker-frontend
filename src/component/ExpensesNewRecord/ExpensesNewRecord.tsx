@@ -2,13 +2,13 @@ import { ChangeEvent, FormEvent, useState } from 'react';
 import DatePicker from 'react-datepicker'
 import dayjs from 'dayjs';
 
+import { DATEPICKER_INPUT_DATE_FORMAT } from 'constant';
 import { useAppDispatch } from 'hook';
 import { addExpense } from 'store/reducer/expenses';
 import { TagSelect, SimpleSelect } from 'component/form';
 import { Expense, ExpenseType } from 'types';
 
 import './_expenses-new-record.scss';
-import { DATEPICKER_INPUT_DATE_FORMAT } from 'constant';
 
 type ExpensesRequiredFields = {
     [Key in keyof Omit<Expense, 'id' | 'createDate' | 'updateDate'>]: boolean;
@@ -76,7 +76,6 @@ export const ExpensesNewRecord = () => {
         }
     }
 
-    // Form input handlers
     const handleChangeAmount = (e: ChangeEvent<HTMLInputElement>) => {
         setAmount(parseFloat(e.currentTarget.value))
     }
@@ -121,17 +120,26 @@ export const ExpensesNewRecord = () => {
                     <span className='required-field' hidden={!requiredFields.amount}>*must be filled</span>
                 </div>
                 <div className="currency">
-                    <SimpleSelect placeholder="CUR" value={currency} onChange={setCurrency} options={dummyCurrencies.map(val => {return {value: val, label: val}})}/>
+                    <SimpleSelect
+                        placeholder="CUR" value={currency} onChange={setCurrency} 
+                        options={dummyCurrencies.map(val => {return {value: val, label: val}})}
+                    />
                     <span className='required-field' hidden={!requiredFields.currency}>*must be filled</span>
                 </div>
                 <div className="flex-row-break"></div>
                 <div className="category">
-                    <TagSelect placeholder='Select category' value={category} onChange={setCategory} enforceWhitelist={false} whitelist={dummyCategories} mode='select'/>
+                    <TagSelect 
+                        placeholder='Select category' value={category} onChange={setCategory} enforceWhitelist={false} 
+                        whitelist={dummyCategories} mode='select'
+                    />
                     <span className='required-field' hidden={!requiredFields.category}>*must be filled</span>
                 </div>
                 <div className="flex-row-break"></div>
                 <div className="type">
-                    <SimpleSelect value={expenseType} onChange={setExpenseType} options={expenseTypes.map(([value, label]) => {return {value, label}})}/>
+                    <SimpleSelect 
+                        value={expenseType} onChange={setExpenseType} 
+                        options={expenseTypes.map(([value, label]) => {return {value, label}})}
+                    />
                     <span className='required-field' hidden={!requiredFields.expenseType}>*must be filled</span>
                 </div>
                 <div className="flex-row-break"></div>

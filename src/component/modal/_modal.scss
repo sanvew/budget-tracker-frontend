@@ -1,0 +1,36 @@
+@use 'assets/scss/utils/variables';
+
+.modal-container {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: variables.$modal-background-color;
+    backdrop-filter: variables.$modal-background-blur;
+}
+
+.modal-content {
+    width: 80%;
+    margin: auto;
+
+    .modal-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+
+        .close-btn {
+            width: 1.5rem;
+            height: 1.5rem;
+            line-height: 1rem;
+        }
+    }
+}
+
+.modal-open {
+    overflow: hidden;
+}

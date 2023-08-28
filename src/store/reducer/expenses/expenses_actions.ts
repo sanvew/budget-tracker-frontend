@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { expensesDao } from "db";
-import { isEqualsExpenseFilter, Expense, ExpenseFilter, Pagination } from "types";
+import { isExpenseFilterEqual,ExpenseFilter, Pagination } from "types"
+import { Expense,  getValidatedExpenseUpdates, isExpenseUpdated, ExpenseUpdates } from "types/expense";
 import { ExpensesState, FetchedExpenses } from "./expenses_reducer";
 
 export const fetchExpenses = createAsyncThunk(
@@ -9,7 +10,7 @@ export const fetchExpenses = createAsyncThunk(
         // TODO: create separate service with source selection based on settings
         try {
             const currState = thunkApi.getState() as ExpensesState
-            if (!isEqualsExpenseFilter(currState.filter, arg.filter)) {
+            if (!isExpenseFilterEqual(currState.filter, arg.filter)) {
                 thunkApi.dispatch(fetchExpensesCount({filter: arg.filter}))
             }
             return {
@@ -19,6 +20,18 @@ export const fetchExpenses = createAsyncThunk(
             } as FetchedExpenses
         } catch (err) {
             thunkApi.rejectWithValue("Unable to fetch expenses")
+        }
+    }
+)
+
+export const fetchExpensesCount = createAsyncThunk(
+    'expenses/count',
+    async (arg: {filter?: ExpenseFilter}, thunkApi) => {
+        // TODO: create separate service with source selection based on settings
+        try {
+            return expensesDao.count(arg.filter)
+        } catch (err) {
+            thunkApi.rejectWithValue("Unable to count expenses")
         }
     }
 )
@@ -36,14 +49,31 @@ export const addExpense = createAsyncThunk(
     }
 )
 
-export const fetchExpensesCount = createAsyncThunk(
-    'expenses/count',
-    async (arg: {filter?: ExpenseFilter}, thunkApi) => {
+export const updateExpense = createAsyncThunk(
+    'expenses/update',
+    async (arg: {expense: Expense, expenseUpdates: ExpenseUpdates}, thunkApi) => {
+        // TODO: create separate service with source selection based on settings
+        if (isExpenseUpdated(arg.expense, arg.expenseUpdates)) {
+            const expenseUpdates = getValidatedExpenseUpdates(arg.expense, arg.expenseUpdates)
+            try {
+                if (await expensesDao.update(arg.expense.id, expenseUpdates) === 0) {
+                    thunkApi.rejectWithValue("Expense not found") 
+                }
+            } catch (err) {
+                thunkApi.rejectWithValue("Unable to update expense")
+            }
+        }
+    }
+)
+
+export const removeExpense = createAsyncThunk(
+    'expenses/remove',
+    async (expenseId: string, thunkApi) => {
         // TODO: create separate service with source selection based on settings
         try {
-            return expensesDao.count(arg.filter)
+            expensesDao.remove(expenseId)
         } catch (err) {
-            thunkApi.rejectWithValue("Unable to count expenses")
+            thunkApi.rejectWithValue("Unable to update expense")
         }
     }
 )

@@ -4,7 +4,7 @@ import ExpensesTable from 'component/ExpensesTable';
 import { fetchExpenses } from 'store/reducer/expenses';
 import { useAppDispatch, useAppSelector } from 'hook';
 import { DEFAULT_EXPENSES_PAGE_SIZE, MAX_PAGES, MAX_PAGES_SEQ_DISPLAYED } from 'constant';
-import { EMPTY_FILTER, ExpenseFilter, ExpensesPagination, isEqualsExpenseFilter, pageToSearchParams } from 'types';
+import { EMPTY_FILTER, ExpenseFilter, ExpensesPagination, isExpenseFilterEqual, pageToSearchParams } from 'types';
 import './_expenses-list.scss';
 
 
@@ -91,7 +91,7 @@ export const ExpensesList = () => {
         <section className="card-main expenses-list">
             <div className="list-heading">
                 <h4>Expenses/Earnings</h4>
-                { !isEqualsExpenseFilter(filter, EMPTY_FILTER) 
+                { !isExpenseFilterEqual(filter, EMPTY_FILTER) 
                     ? <h5>Found {totalCount} results</h5>
                     : ''
                 }

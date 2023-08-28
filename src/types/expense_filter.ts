@@ -19,7 +19,7 @@ export const EMPTY_FILTER: Readonly<ExpenseFilter> = {
     expenseType: undefined,
 }
 
-export const isEqualsExpenseFilter = (o1?: ExpenseFilter, o2?: ExpenseFilter): boolean => {
+export const isExpenseFilterEqual = (o1?: ExpenseFilter, o2?: ExpenseFilter): boolean => {
     if (isEqual(o1, EMPTY_FILTER)) o1 = undefined
     if (isEqual(o2, EMPTY_FILTER)) o2 = undefined
     return isEqual(o1, o2)

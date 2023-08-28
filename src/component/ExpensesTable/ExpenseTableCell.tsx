@@ -1,20 +1,21 @@
+import { Expense } from "types";
+
 type Props = {
-    category: string,
-    description: string,
-    amount: number,
-    expenseType: 'outcome' | 'income',
-    currency: string,
+    expense: Expense
+    onClick: (expense: Expense) => void
 }
 
-const ExpenseTableCell = ({ category, description, amount, expenseType, currency}: Props) => {
-    const amountSign = expenseType === 'outcome' ? '-' : '+';
-    const amountClass = expenseType === 'outcome' ? 'outcome-value' : 'income-value';
+const ExpenseTableCell = ({expense, onClick}: Props) => {
+    const amountSign = expense.expenseType === 'outcome' ? '-' : '+';
+    const amountClass = expense.expenseType === 'outcome' ? 'outcome-value' : 'income-value';
 
     return (
-        <tr className="data-row">
-            <td className="category">{category}</td>
-            <td className="description">{description}</td>
-            <td className="amount"><span className={amountClass}>{amountSign}{amount}</span> {currency}</td>
+        <tr className="data-row" onClick={() => onClick(expense)}>
+            <td className="category">{expense.category}</td>
+            <td className="description">{expense.description}</td>
+            <td className="amount">
+                <span className={amountClass}>{amountSign}{expense.amount}</span> {expense.currency}
+            </td>
         </tr>
     )
 }

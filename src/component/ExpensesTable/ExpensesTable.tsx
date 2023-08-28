@@ -1,16 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import dayjs from 'dayjs';
 
-import ExpenseTableCell from './ExpenseTableCell';
-import DateTableCell from './DateTableCell';
 import { useAppSelector } from 'hook';
 import { Expense } from 'types';
 import { DEFAULT_DATE_FORMAT } from 'constant';
+import ExpenseTableCell from './ExpenseTableCell';
+import DateTableCell from './DateTableCell';
+import { ExpenseDetails } from 'component/ExpenseDetails/ExpensesDetails';
 
 import './_expenses-table.scss';
 
 export const ExpensesTable = () => {
-    const {expenses, fetchError: error, isLoading} = useAppSelector(state => state.expensesReducer)
+    const {expenses, error, isLoading} = useAppSelector(state => state.expensesReducer)
+
+    const [selectedExpense, setSelectedExpense] = useState<Expense | undefined>()
+    const [showExpenseDetails, setShowExpenseDetails] = useState<boolean>(false)
+
+    const handleExpenseTableCell = (expense: Expense) => {
+        setSelectedExpense(expense)
+        setShowExpenseDetails(true)
+    }
+
+    const callbackIsExpenseDetailsShown = (shown: boolean) => {
+        setShowExpenseDetails(shown)
+    }
 
     const expensesGroupByDate = Object.entries(
         expenses.reduce((dateGroup, expense) => {
@@ -28,10 +41,7 @@ export const ExpensesTable = () => {
             <React.Fragment key={dateString}>
                 <DateTableCell date={date}/>
                 { expensesByDate.map((item) =>
-                    <ExpenseTableCell 
-                        key={item.id} category={item.category} description={item.description} amount={item.amount} 
-                        expenseType={item.expenseType} currency={item.currency}
-                    />
+                    <ExpenseTableCell key={item.id} expense={item} onClick={handleExpenseTableCell}/>
                 )}
             </React.Fragment>
         )
@@ -40,7 +50,7 @@ export const ExpensesTable = () => {
     // TODO: add styling for error, loading and 'no data found'
     return (
         <>
-            { error && <h1>{error}</h1> }
+            { error.fetch && <h1>{error.fetch}</h1> }
             { isLoading && <h1>loading data...</h1> }
             { !isLoading && expenses.length > 0
                 ? 
@@ -52,6 +62,9 @@ export const ExpensesTable = () => {
                 :
                     <h1>No data found</h1>
             }
+            <ExpenseDetails
+                expense={selectedExpense} show={showExpenseDetails} isShown={callbackIsExpenseDetailsShown}
+            />
         </>
     )
 }

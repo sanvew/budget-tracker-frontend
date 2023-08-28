@@ -11,14 +11,10 @@ const store = configureStore({
         getDefaultMiddleware({
             serializableCheck: {
                 ignoredActionPaths: [
-                    /payload.expenses.[0-9]+.date/, /payload.expenses.[0-9]+.createDate/,
-                    /payload.expenses.[0-9]+.updateDate/, 'payload.page', 'payload.date', 'payload.createDate',
-                    'payload.updateDate', 'meta.arg.date', 'meta.arg.createDate', 'meta.arg.updateDate',
-                    'meta.arg.filter.fromDate', 'meta.arg.filter.toDate', 'meta.arg.page',
+                    /.date$/, /.createDate$/, /.updateDate$/, /.page$/, /.fromDate$/, /.toDate$/
                 ],
                 ignoredPaths: [
-                    /expensesReducer.expenses.[0-9]+.date/, /expensesReducer.expenses.[0-9]+.createDate/,
-                    /expensesReducer.expenses.[0-9]+.updateDate/, 'expensesReducer.page'
+                    /.date$/, /.createDate$/, /.updateDate$/, /.page$/, /.fromDate$/, /.toDate$/
                 ],
             },
         }),

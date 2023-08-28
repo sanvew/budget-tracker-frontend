@@ -1,53 +1,57 @@
 <div class="modal-container">
-    <article class="card-main expenses-details">
+    <div class="modal-content card-main">
         <div class="modal-heading">
             <h4>Expense details</h4>
             <button class="red-red-red-button close-btn">X</button>
         </div>
-        <div class="expenses-details-content">
-            <div class="date">
-                <input type="date" value="2022-12-18" disabled>
-            </div>
-            <div class="flex-row-break"></div>
-            <div class="amount">
-                <input type="number" placeholder="Amount" value="6969" disabled>
-            </div>
-            <div class="currency">
-                <select disabled>
-                    <option value="" disabled>CUR</option>
-                    <option value="gel" selected>GEL</option>
-                    <option value="usd">USD</option>
-                    <option value="eur">EUR</option>
-                    <option value="rub">RUB</option>
-                </select>
-            </div>
-            <div class="flex-row-break"></div>
-            <div class="type">
-                <select disabled>
-                    <option value="outcome" selected>Outcome</option>
-                    <option value="income">Income</option>
-                    TODO: assume category based on record type income/outcome
-                </select>
-            </div>
-            <div class="category">
-                <select disabled>
-                    <option value="" disabled>Select category</option>
-                    <option value="groceries" selected>groceries</option>
-                    <option value="sport">sport</option>
-                    <option value="transport">transport</option>
-                    <option value="salary">salary</option>
-                </select>
-            </div>
-            <div class="flex-row-break"></div>
-            <div class="comment">
-                <textarea placeholder="Comment..." disabled>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Provident perspiciatis sapiente delectus rem sint officiis itaque expedita molestias, corporis ipsa sit soluta eum ab natus molestiae esse incidunt consectetur! Minus!</textarea>
-            </div>
-            <div class="flex-row-break"></div>
-            <button class="acc-acc-main-button" hidden>Save</button>
-            <button class="main-main-acc-button" hidden>Cancel</button>
-            <button class="clear-main-button ok-btn">OK</button>
-            <button class="acc-acc-main-button edit-btn">Edit</button>
-            <button class="delete-button remove-btn">Remove</button>
+        <div class="modal-body">
+            <article class="expenses-details">
+                <div class="expenses-details-content">
+                    <div class="date">
+                        <input type="date" value="2022-12-18" disabled>
+                    </div>
+                    <div class="flex-row-break"></div>
+                    <div class="amount">
+                        <input type="number" placeholder="Amount" value="6969" disabled>
+                    </div>
+                    <div class="currency">
+                        <select disabled>
+                            <option value="" disabled>CUR</option>
+                            <option value="gel" selected>GEL</option>
+                            <option value="usd">USD</option>
+                            <option value="eur">EUR</option>
+                            <option value="rub">RUB</option>
+                        </select>
+                    </div>
+                    <div class="flex-row-break"></div>
+                    <div class="type">
+                        <select disabled>
+                            <option value="outcome" selected>Outcome</option>
+                            <option value="income">Income</option>
+                            TODO: assume category based on record type income/outcome
+                        </select>
+                    </div>
+                    <div class="category">
+                        <select disabled>
+                            <option value="" disabled>Select category</option>
+                            <option value="groceries" selected>groceries</option>
+                            <option value="sport">sport</option>
+                            <option value="transport">transport</option>
+                            <option value="salary">salary</option>
+                        </select>
+                    </div>
+                    <div class="flex-row-break"></div>
+                    <div class="comment">
+                        <textarea placeholder="Comment..." disabled>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Provident perspiciatis sapiente delectus rem sint officiis itaque expedita molestias, corporis ipsa sit soluta eum ab natus molestiae esse incidunt consectetur! Minus!</textarea>
+                    </div>
+                    <div class="flex-row-break"></div>
+                    <button class="acc-acc-main-button" hidden>Save</button>
+                    <button class="main-main-acc-button" hidden>Cancel</button>
+                    <button class="clear-main-button ok-btn">OK</button>
+                    <button class="acc-acc-main-button edit-btn">Edit</button>
+                    <button class="delete-button remove-btn">Remove</button>
+                </div>
+            </article>
         </div>
-    </article>
+    </div>
 </div>

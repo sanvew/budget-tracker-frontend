@@ -68,12 +68,14 @@ export const ExpensesFilter = () => {
 
     // Form input handlers
     const handleClear = () => {
-        if (fromDate == null && toDate == null && categories == null && (expenseType == null || expenseType === 'all')) {
+        if (
+            fromDate == null && toDate == null && categories == null && (expenseType == null || expenseType === 'all')
+        ) {
             return
         }
         setFromDate(undefined)
         setToDate(undefined)
-        setCategories(undefined)
+        setCategories([])
         setExpenseType(undefined)
 
         applyFilter(undefined)
@@ -128,7 +130,10 @@ export const ExpensesFilter = () => {
                 </div>
                 <div className="flex-row-break"></div>
                 <div className="category">
-                    <TagSelect placeholder='Select category(s)' value={categories} onChange={setCategories} whitelist={dummyCategories}/>
+                    <TagSelect 
+                        placeholder='Select category(s)' value={categories} onChange={setCategories} 
+                        whitelist={dummyCategories}
+                    />
                 </div>
                 <div className="flex-row-break"></div>
                 <div className="type">

@@ -6,13 +6,9 @@ Personal budget tracking app webUI
     - [ ] Statistics page
         - [ ] Create design
     - [X] Expense editor modal window
-        - [ ] Add toast message on successful/failed update, remove
-        - [ ] Refetch expenses to update expense list
-        - [ ] Fix category disabling
     - [ ] Settings tab
         - [ ] Create design
-    - [ ] Refactor ExpenseNewRecord
-    - [ ] ExpensesFilter clear category
+    - [ ] ExpenseNewRecord refactor 
 - Features
     - [ ] Expenses import/export (csv, json)
     - [ ] Improve categories service

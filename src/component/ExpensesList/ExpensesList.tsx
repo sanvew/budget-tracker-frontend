@@ -24,6 +24,7 @@ export const ExpensesList = () => {
     useEffect(() => {
         if (totalPages != null) {
             const selectedPage = page?.pageNum ?? 1
+            setSearchParams(prev => pageToSearchParams(prev, selectedPage))
 
             if (totalPages <= MAX_PAGES_SEQ_DISPLAYED) {
                 setPagesNavigationElements(genPageSequence(totalPages, (i) => i + 1, selectedPage)) 

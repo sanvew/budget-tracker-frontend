@@ -1,16 +1,17 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { expensesDao } from "db";
+import { RootState } from 'store'
 import { isExpenseFilterEqual,ExpenseFilter, Pagination } from "types"
 import { Expense,  getValidatedExpenseUpdates, isExpenseUpdated, ExpenseUpdates } from "types/expense";
-import { ExpensesState, FetchedExpenses } from "./expenses_reducer";
+import { FetchedExpenses } from "./expenses_reducer";
 
 export const fetchExpenses = createAsyncThunk(
     'expenses/fetch',
     async (arg: {filter?: ExpenseFilter, page?: Pagination}, thunkApi) => {
         // TODO: create separate service with source selection based on settings
         try {
-            const currState = thunkApi.getState() as ExpensesState
-            if (!isExpenseFilterEqual(currState.filter, arg.filter)) {
+            const currState = thunkApi.getState() as RootState 
+            if (!isExpenseFilterEqual(currState.expensesReducer.filter, arg.filter)) {
                 thunkApi.dispatch(fetchExpensesCount({filter: arg.filter}))
             }
             return {

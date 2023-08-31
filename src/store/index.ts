@@ -5,7 +5,7 @@ const rootReducer = combineReducers({
     expensesReducer
 })
 
-const store = configureStore({
+export const store = configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
@@ -20,13 +20,6 @@ const store = configureStore({
         }),
 })
 
-type RootState = ReturnType<typeof rootReducer>
-type AppStore =  ReturnType<typeof configureStore>
-type AppDispatch = typeof store.dispatch;
-
-export {
-    store,
-    type RootState,
-    type AppStore,
-    type AppDispatch
-}
+export type RootState = ReturnType<typeof rootReducer>
+export type AppStore =  ReturnType<typeof configureStore>
+export type AppDispatch = typeof store.dispatch;

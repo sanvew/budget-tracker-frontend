@@ -96,7 +96,7 @@ export const ExpensesNewRecord = () => {
     }
 
     // TODO: create separate table 
-    const dummyCurrencies = ["GEL", "USD", "EUR", "RUB"]
+    const dummyCurrencies = ["GEL", "RSD", "USD", "EUR", "RUB"]
     // TODO: create separate table 
     const dummyCategories = ["groceries", "sport", "transport"];
 

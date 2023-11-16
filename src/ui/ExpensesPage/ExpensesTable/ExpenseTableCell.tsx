@@ -1,4 +1,4 @@
-import { Expense } from "types";
+import { Expense } from "type";
 
 type Props = {
     expense: Expense

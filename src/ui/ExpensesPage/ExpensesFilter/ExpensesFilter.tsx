@@ -3,29 +3,35 @@ import { useSearchParams } from 'react-router-dom';
 import DatePicker from 'react-datepicker'
 import dayjs from 'dayjs';
 
-import { TagSelect, SimpleSelect } from 'component/form';
+import { TagSelect, SimpleSelect } from 'ui/common/form';
 import { useAppDispatch, useAppSelector } from 'hook';
 import { fetchExpenses } from 'store/reducer/expenses';
 import { DATEPICKER_INPUT_DATE_FORMAT } from 'constant';
-import { ExpensesPagination, ExpenseFilter, FilterExpenseType, expenseFilterToSearchParams } from 'types';
+import { ExpensesPagination, ExpenseFilter, FilterExpenseType, expenseFilterToSearchParams } from 'type';
 
 import './_expenses-filter.scss';
+import { fetchCategories } from 'store/reducer/category';
 
 export const ExpensesFilter = () => {
     const dispatch = useAppDispatch()
 
+    const {categories} = useAppSelector(state => state.categoryReducer)
     const {filter} = useAppSelector(state => state.expensesReducer)
     const [, setSearchParams] = useSearchParams();
     const [fromDate, setFromDate] = useState<Date>()
     const [toDate, setToDate] = useState<Date>()
-    const [categories, setCategories] = useState<string[]>()
+    const [selectedCategories, setSelectedCategories] = useState<string[]>()
     const [expenseType, setExpenseType] = useState<string>()
+
+    useEffect(() => {
+        dispatch(fetchCategories())
+    }, [])
 
     useEffect(() => {
         if (filter != null) {
             setFromDate(filter.fromDate)
             setToDate(filter.toDate)
-            setCategories(filter.categories)
+            setSelectedCategories(filter.categories)
             setExpenseType(filter.expenseType)
         }
     }, [filter])
@@ -55,7 +61,7 @@ export const ExpensesFilter = () => {
     }
 
     const createExpenseFilterFromInput = (): ExpenseFilter => {
-        return {categories, fromDate, toDate, expenseType: expenseType as FilterExpenseType}
+        return {categories: selectedCategories, fromDate, toDate, expenseType: expenseType as FilterExpenseType}
     }
 
     const applyFilter = (expenseFilter?: ExpenseFilter) => {
@@ -69,13 +75,13 @@ export const ExpensesFilter = () => {
     // Form input handlers
     const handleClear = () => {
         if (
-            fromDate == null && toDate == null && categories == null && (expenseType == null || expenseType === 'all')
+            fromDate == null && toDate == null && selectedCategories == null && (expenseType == null || expenseType === 'all')
         ) {
             return
         }
         setFromDate(undefined)
         setToDate(undefined)
-        setCategories([])
+        setSelectedCategories([])
         setExpenseType(undefined)
 
         applyFilter(undefined)
@@ -96,7 +102,6 @@ export const ExpensesFilter = () => {
     }
 
     // TODO: create separate table 
-    const dummyCategories = ["groceries", "sport", "transport"];
     const expensesTypes = [["all", "All"], ["outcome", "Outcome"], ["income", "Income"]]
 
     return (
@@ -131,8 +136,8 @@ export const ExpensesFilter = () => {
                 <div className="flex-row-break"></div>
                 <div className="category">
                     <TagSelect 
-                        placeholder='Select category(s)' value={categories} onChange={setCategories} 
-                        whitelist={dummyCategories}
+                        placeholder='Select category(s)' value={selectedCategories} onChange={setSelectedCategories} 
+                        whitelist={categories.map(c => c.name)} enforceWhitelist={false}
                     />
                 </div>
                 <div className="flex-row-break"></div>

@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import ExpensesTable from 'component/ExpensesTable';
+import ExpensesTable from 'ui/ExpensesPage/ExpensesTable';
 import { fetchExpenses } from 'store/reducer/expenses';
 import { useAppDispatch, useAppSelector } from 'hook';
 import { DEFAULT_EXPENSES_PAGE_SIZE, MAX_PAGES, MAX_PAGES_SEQ_DISPLAYED } from 'constant';
-import { EMPTY_FILTER, ExpenseFilter, ExpensesPagination, isExpenseFilterEqual, pageToSearchParams } from 'types';
+import { EMPTY_FILTER, ExpenseFilter, ExpensesPagination, isExpenseFilterEqual, pageToSearchParams } from 'type';
 import './_expenses-list.scss';
 
 

@@ -1,6 +1,6 @@
 import { TagifySettings, BaseTagData } from "@yaireo/tagify";
 import Tags from "@yaireo/tagify/dist/react.tagify";
-import { BaseInputProps } from "types";
+import { BaseInputProps } from "type";
 
 type Props = BaseInputProps<string[]> & {
     mode?: 'multi' | 'select',

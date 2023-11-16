@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import dayjs from 'dayjs';
 
 import { useAppSelector } from 'hook';
-import { Expense } from 'types';
+import { Expense } from 'type';
 import { DEFAULT_DATE_FORMAT } from 'constant';
 import ExpenseTableCell from './ExpenseTableCell';
 import DateTableCell from './DateTableCell';
-import { ExpenseDetails } from 'component/ExpenseDetails/ExpensesDetails';
+import ExpenseDetails from 'ui/ExpensesPage/ExpenseDetails';
 
 import './_expenses-table.scss';
 

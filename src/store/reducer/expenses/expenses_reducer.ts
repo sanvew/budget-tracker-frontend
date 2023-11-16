@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { Expense, ExpenseFilter, Pagination } from "types";
+import { Expense, ExpenseFilter, Pagination } from "type";
 import { addExpense, fetchExpenses, fetchExpensesCount, removeExpense, updateExpense, } from "./expenses_actions";
 
 export type ExpensesState = {
@@ -33,8 +33,7 @@ export type FetchedExpenses = {
 const expensesReducer = createSlice({
         name: 'expenses',
         initialState,
-        reducers: {
-        },
+        reducers: {},
         extraReducers(builder) {
             builder
                 .addCase(fetchExpenses.fulfilled.type, (state, action: PayloadAction<FetchedExpenses>) => {

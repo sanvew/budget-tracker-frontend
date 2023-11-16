@@ -1,5 +1,5 @@
 import { ChangeEvent } from "react"
-import { BaseInputProps } from "types"
+import { BaseInputProps } from "type"
 
 type Entry = {
     value: string,

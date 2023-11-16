@@ -1,15 +1,16 @@
 import { ChangeEvent, useEffect, useState } from "react"
 import DatePicker from 'react-datepicker'
-import { Expense, ExpenseType, getExpenseValidFields, isExpenseValid, ExpenseUpdates, ExpenseValidFields } from "types"
+import { Expense, ExpenseType, getExpenseValidFields, isExpenseValid, ExpenseUpdates, ExpenseValidFields } from "type"
 import { DATEPICKER_INPUT_DATE_FORMAT } from "constant"
-import { useAppDispatch } from "hook/redux"
+import { useAppDispatch, useAppSelector } from "hook/redux"
 import { removeExpense, updateExpense } from "store/reducer/expenses"
-import { SimpleSelect, TagSelect } from "component/form"
-import { ModalWindow } from "component/modal/ModalWindow"
-import { ModalHeader } from "component/modal/ModalHeader"
-import { ModalBody } from "component/modal/ModalBody"
+import { SimpleSelect, TagSelect } from "ui/common/form"
+import { ModalWindow } from "ui/common/modal/ModalWindow"
+import { ModalHeader } from "ui/common/modal/ModalHeader"
+import { ModalBody } from "ui/common/modal/ModalBody"
 
 import './_expense-details.scss'
+import { addCategory, fetchCategories } from "store/reducer/category"
 
 type Props = {
     expense?: Expense
@@ -23,12 +24,17 @@ export const ExpenseDetails = ({ expense, show, isShown }: Props) => {
     const [notEditable, setNotEditable] = useState<boolean>(true)
     const [validFields, setValidFields] = useState<ExpenseValidFields>()
 
+    const {categories} = useAppSelector(state => state.categoryReducer)
     const [date, setDate] = useState<Date | undefined>(expense?.date)
     const [amount, setAmount] = useState<number | undefined>(expense?.amount)
     const [currency, setCurrency] = useState<string | undefined>(expense?.currency)
     const [category, setCategory] = useState<string[] | undefined>(expense != null ? [expense.category] : undefined)
     const [expenseType, setExpenseType] = useState<string | undefined>(expense?.expenseType)
     const [description, setDescription] = useState<string | undefined>(expense?.description)
+
+    useEffect(() => {
+        dispatch(fetchCategories())
+    }, [])
 
     useEffect(() => {
         setFieldFromExpense(expense)
@@ -77,6 +83,10 @@ export const ExpenseDetails = ({ expense, show, isShown }: Props) => {
             setNotEditable(true)
             setFieldFromExpense({...expense, ...expenseUpdates})
             setValidFields(undefined)
+            if (!categories.map(c => c.name).includes(category![0])) {
+                dispatch(addCategory({name: category![0]}))
+                dispatch(fetchCategories())
+            }
         } else {
             setValidFields(validFields)
         }
@@ -101,8 +111,6 @@ export const ExpenseDetails = ({ expense, show, isShown }: Props) => {
 
     // TODO: create separate table 
     const dummyCurrencies = ["GEL", "RSD", "USD", "EUR", "RUB"]
-    // TODO: create separate table 
-    const dummyCategories = ["groceries", "sport", "transport"];
 
     const expenseTypes: [ExpenseType, string][] = [["outcome", "Outcome"], ["income", "Income"]];
 
@@ -154,7 +162,7 @@ export const ExpenseDetails = ({ expense, show, isShown }: Props) => {
                         <div className="category">
                             <TagSelect 
                                 placeholder='Select category' value={category} onChange={setCategory}
-                                enforceWhitelist={false} whitelist={dummyCategories} mode='select'
+                                enforceWhitelist={false} whitelist={categories.map(c => c.name)} mode='select'
                                 disabled={notEditable}
                             />
                             <span className='required-field' hidden={validFields?.category ?? true}>

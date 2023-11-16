@@ -1,4 +1,4 @@
-# budget-tracker-ui
+# budget-tracker
 Personal budget tracking app webUI
 
 ## TODO:
@@ -10,13 +10,16 @@ Personal budget tracking app webUI
         - [ ] Create design
     - [ ] ExpenseNewRecord refactor 
 - Features
-    - [ ] Expenses import/export (csv, json)
-    - [ ] Improve categories service
-        - [ ] Add default categories (groceries, food, utility, health, sport, other etc.)
-        - [ ] Add new categories (save to indexedDB/backend)
+    - [ ] Expenses export (csv, json)
+    - [ ] Categories service
+        - [X] Add default categories (groceries, food, utility, health, sport, other etc.)
+        - [X] Save to indexedDB/backend new categories
+        - [X] Filter expenses: search categories by entered word beginning
         - [ ] Add categories settings (separate section in settings)
-    - [ ] Caching currency exchange rate, align everything to USD
-    - [ ] Allow to create record without description
+    - [ ] Currency service
+        - [ ] Store list of currencies in db
+        - [ ] Caching currency exchange rate, align everything to primary currency (USD or EUR for now) (available currencies exchange rates: [GEL](https://nbg.gov.ge/en/monetary-policy/currency), [RSD](https://kurs.resenje.org/doc/?shell#authentication))
+        - [ ] Add currencies settings (separate section in settings)
     - [X] Expenses pagination
 - Other
     - [ ] Migrate to Vite

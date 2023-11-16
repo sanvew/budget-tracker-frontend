@@ -1,14 +1,15 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker'
 import dayjs from 'dayjs';
 
 import { DATEPICKER_INPUT_DATE_FORMAT } from 'constant';
-import { useAppDispatch } from 'hook';
+import { useAppDispatch, useAppSelector } from 'hook';
 import { addExpense } from 'store/reducer/expenses';
-import { TagSelect, SimpleSelect } from 'component/form';
-import { Expense, ExpenseType } from 'types';
+import { TagSelect, SimpleSelect } from 'ui/common/form';
+import { Category, Expense, ExpenseType } from 'type';
 
 import './_expenses-new-record.scss';
+import { addCategory, fetchCategories } from 'store/reducer/category';
 
 type ExpensesRequiredFields = {
     [Key in keyof Omit<Expense, 'id' | 'createDate' | 'updateDate'>]: boolean;
@@ -17,6 +18,7 @@ type ExpensesRequiredFields = {
 export const ExpensesNewRecord = () => {
     const dispatch = useAppDispatch()
 
+    const {categories} = useAppSelector(state => state.categoryReducer)
     const [requiredFields, setRequiredFields] = useState<ExpensesRequiredFields>({} as ExpensesRequiredFields)
     const [date, setDate] = useState<Date>(new Date())
     const [amount, setAmount] = useState<number>()
@@ -24,6 +26,10 @@ export const ExpensesNewRecord = () => {
     const [category, setCategory] = useState<string[]>()
     const [expenseType, setExpenseType] = useState<string>('outcome' as ExpenseType)
     const [description, setDescription] = useState<string>()
+
+    useEffect(() => {
+        dispatch(fetchCategories())
+    }, [])
 
     const validateInput = (): boolean => {
         let isValid = true
@@ -62,9 +68,8 @@ export const ExpensesNewRecord = () => {
         return isValid
     }
 
-    const createExpenseRecord = (): Expense => {
+    const createExpenseRecord = (): Omit<Expense, 'id'> => {
         return {
-            id: crypto.randomUUID(),
             date: date,
             createDate: new Date(),
             updateDate: new Date(),
@@ -89,6 +94,10 @@ export const ExpensesNewRecord = () => {
         if (validateInput()) {
             // TODO: add toast message for new record 
             dispatch(addExpense(createExpenseRecord()))
+            if (!categories.map(c => c.name).includes(category![0])) {
+                dispatch(addCategory({name: category![0]}))
+                dispatch(fetchCategories())
+            }
         } else {
             // TODO: add error toast message
             window.alert('Some fields not valid')
@@ -97,8 +106,6 @@ export const ExpensesNewRecord = () => {
 
     // TODO: create separate table 
     const dummyCurrencies = ["GEL", "RSD", "USD", "EUR", "RUB"]
-    // TODO: create separate table 
-    const dummyCategories = ["groceries", "sport", "transport"];
 
     const expenseTypes: [ExpenseType, string][] = [["outcome", "Outcome"], ["income", "Income"]];
     
@@ -130,7 +137,7 @@ export const ExpensesNewRecord = () => {
                 <div className="category">
                     <TagSelect 
                         placeholder='Select category' value={category} onChange={setCategory} enforceWhitelist={false} 
-                        whitelist={dummyCategories} mode='select'
+                        whitelist={categories.map(c => c.name)} mode='select'
                     />
                     <span className='required-field' hidden={!requiredFields.category}>*must be filled</span>
                 </div>

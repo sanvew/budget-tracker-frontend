@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { expensesDao } from "db";
+import { expensesDao } from "api/indexeddb";
 import { RootState } from 'store'
-import { isExpenseFilterEqual,ExpenseFilter, Pagination } from "types"
-import { Expense,  getValidatedExpenseUpdates, isExpenseUpdated, ExpenseUpdates } from "types/expense";
+import { isExpenseFilterEqual,ExpenseFilter, Pagination } from "type"
+import { Expense,  getValidatedExpenseUpdates, isExpenseUpdated, ExpenseUpdates } from "type/expense";
 import { FetchedExpenses } from "./expenses_reducer";
 
 export const fetchExpenses = createAsyncThunk(
@@ -39,10 +39,11 @@ export const fetchExpensesCount = createAsyncThunk(
 
 export const addExpense = createAsyncThunk(
     'expenses/add',
-    async (expense: Expense, thunkApi) => {
+    async (expense: Omit<Expense, 'id'>, thunkApi) => {
+        const e = { ...expense, id: crypto.randomUUID()}
         // TODO: create separate service with source selection based on settings
         try {
-            await expensesDao.save(expense)
+            await expensesDao.save(e)
             return expense
         } catch (err) {
             thunkApi.rejectWithValue("Unable to add expenses")

@@ -1,20 +1,7 @@
-import dayjs from "dayjs";
-import Dexie, { Collection } from "dexie";
-
-import { EMPTY_FILTER, Expense, ExpenseFilter, ExpenseUpdates, isExpenseFilterEqual, Pagination } from "types";
-
-class BudgetTrackingDB extends Dexie {
-    static readonly #DB_NAME = 'budgetTracking';
-
-    expenses!: Dexie.Table<Expense, string>
-
-    constructor() {
-        super(BudgetTrackingDB.#DB_NAME)
-        this.version(1).stores({
-            expenses: 'id, date, createDate, category, expenseType',
-        })
-    }
-}
+import dayjs from "dayjs"
+import { Collection } from "dexie"
+import { EMPTY_FILTER, Expense, ExpenseFilter, ExpenseUpdates, isExpenseFilterEqual, Pagination } from "type"
+import appIndexedDB, { BudgetTrackingDB } from "./db"
 
 class ExpenseDao {
     readonly #db: BudgetTrackingDB
@@ -33,21 +20,23 @@ class ExpenseDao {
     }
 
     getAll(expenseFilter?: ExpenseFilter, page?: Pagination): Collection<Expense, string> {
-        let result: Collection<Expense, string> = this.#db.expenses.toCollection()
+        let result: Collection<Expense, string>
         if (expenseFilter != null && !isExpenseFilterEqual(expenseFilter, EMPTY_FILTER)) {
             if (expenseFilter.fromDate != null || expenseFilter.toDate != null) {
                 result = this.#filteredByDate(expenseFilter.fromDate, expenseFilter.toDate)
             }
             if (expenseFilter.categories != null && expenseFilter.categories.length !== 0 ) {
-                result = result.filter(val => expenseFilter.categories!.includes(val.category))
+                result = this.#db.expenses.orderBy('date')
+                    .filter(val => expenseFilter.categories!.find(cat => val.category.startsWith(cat)) != null)
             }
             if (expenseFilter.expenseType != null && expenseFilter.expenseType !== 'all') {
-                result = result.filter(val => val.expenseType === expenseFilter.expenseType)
+                result = this.#db.expenses.orderBy('date')
+                    .filter(val => val.expenseType === expenseFilter.expenseType)
             }
         } else {
             result = this.#db.expenses.orderBy('date')
         }
-        result = result.reverse()
+        result = result!.reverse()
         return page != null ? this.#pagination(result, page) : result
     }
 
@@ -92,5 +81,4 @@ class ExpenseDao {
     } 
 }
 
-const appIndexedDB = new BudgetTrackingDB();
 export const expensesDao = new ExpenseDao(appIndexedDB);

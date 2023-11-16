@@ -11,12 +11,12 @@ import isBetween from 'dayjs/plugin/isBetween'
 
 import { store } from 'store';
 
-import Root from 'page/Root';
+import Root from 'ui/Root';
 
 import 'assets/scss/_index.scss';
 import 'react-datepicker/dist/react-datepicker.css'
 
-import ExpensesPage from 'page/ExpensesPage';
+import ExpensesPage from 'ui/ExpensesPage';
 
 // days plugins initialization
 dayjs.extend(customParseFormat)

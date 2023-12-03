@@ -14,7 +14,7 @@ const ExpenseTableCell = ({expense, onClick}: Props) => {
             <td className="category">{expense.category}</td>
             <td className="description">{expense.description}</td>
             <td className="amount">
-                <span className={amountClass}>{amountSign}{expense.amount}</span> {expense.currency}
+                <span className={amountClass}>{amountSign}{expense.amount}</span> {expense.currencyAlfa}
             </td>
         </tr>
     )

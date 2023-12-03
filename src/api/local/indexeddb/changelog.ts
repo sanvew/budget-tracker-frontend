@@ -1,5 +1,5 @@
 import { Transaction } from "dexie"
-import { Category, DEFAULT_CATEGORIES } from "type"
+import { Category, DEFAULT_CATEGORIES, DEFAULT_CURRENCIES } from "type"
 
 export interface IndexedDBChangelog {
     version: number,
@@ -16,8 +16,19 @@ const DB_CHANGELOG: IndexedDBChangelog[] = [
         },
         transCallback: (trans => {
             const defaultCategories = DEFAULT_CATEGORIES.map(c => ({name: c, id: crypto.randomUUID()} as Category))
-            console.log(defaultCategories)
             return trans.table('category').bulkAdd(defaultCategories)
+        })
+    },
+    {
+        version: 1.2,
+        schema: {
+            expenses: 'id, date, createDate, category, expenseType',
+            category: 'id, &name',
+            currency: 'id, &alfa, &numeric',
+        },
+        transCallback: (trans => {
+            const defaultCurrencies = DEFAULT_CURRENCIES.map(c => ({...c, id: crypto.randomUUID()} as Category))
+            return trans.table('currency').bulkAdd(defaultCurrencies)
         })
     }
 ]

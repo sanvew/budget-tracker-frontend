@@ -12,7 +12,7 @@ export interface Expense {
     description: string,
     amount: number,
     expenseType: ExpenseType,
-    currency: string
+    currencyAlfa: string,
 }
 
 export type ExpenseUpdates = Partial<Omit<Expense, 'id' | 'createDate' | 'updateDate'>>
@@ -51,10 +51,10 @@ export const getExpenseValidFields = (expense: ExpenseUpdates): ExpenseValidFiel
         expenseValidFields.amount = false 
     }
     // TODO: check for valid currency
-    if (expense.currency != null && expense.currency.trim() !== '') {
-        expenseValidFields.currency = true
+    if (expense.currencyAlfa != null && expense.currencyAlfa.trim() !== '') {
+        expenseValidFields.currencyAlfa = true
     } else {
-        expenseValidFields.currency = false
+        expenseValidFields.currencyAlfa = false
     }
 
     if (expense.category != null && expense.category.trim() !== '') {

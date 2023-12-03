@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
-import { categoryDao } from "api/indexeddb"
+import { categoryDao } from "api/local/indexeddb"
 import { Category } from "type"
 
 export const fetchCategories = createAsyncThunk(

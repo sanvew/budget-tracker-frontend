@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { expensesDao } from "api/indexeddb";
+import { expensesDao } from "api/local/indexeddb";
 import { RootState } from 'store'
 import { isExpenseFilterEqual,ExpenseFilter, Pagination } from "type"
 import { Expense,  getValidatedExpenseUpdates, isExpenseUpdated, ExpenseUpdates } from "type/expense";
@@ -7,15 +7,17 @@ import { FetchedExpenses } from "./expenses_reducer";
 
 export const fetchExpenses = createAsyncThunk(
     'expenses/fetch',
-    async (arg: {filter?: ExpenseFilter, page?: Pagination}, thunkApi) => {
+    async (arg: {filter?: ExpenseFilter, page?: Pagination, currency?: string}, thunkApi) => {
         // TODO: create separate service with source selection based on settings
         try {
             const currState = thunkApi.getState() as RootState 
             if (!isExpenseFilterEqual(currState.expensesReducer.filter, arg.filter)) {
                 thunkApi.dispatch(fetchExpensesCount({filter: arg.filter}))
             }
+            // TODO: return expenses in desired currency
+            const expenses = await expensesDao.getAll(arg.filter, arg.page).sortBy('date')
             return {
-                expenses: await expensesDao.getAll(arg.filter, arg.page).sortBy('date'),
+                expenses: expenses,
                 filter: arg.filter,
                 page: arg.page 
             } as FetchedExpenses

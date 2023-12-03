@@ -25,9 +25,10 @@ export const ExpenseDetails = ({ expense, show, isShown }: Props) => {
     const [validFields, setValidFields] = useState<ExpenseValidFields>()
 
     const {categories} = useAppSelector(state => state.categoryReducer)
+    const {currencies} = useAppSelector(state => state.currencyReducer)
     const [date, setDate] = useState<Date | undefined>(expense?.date)
     const [amount, setAmount] = useState<number | undefined>(expense?.amount)
-    const [currency, setCurrency] = useState<string | undefined>(expense?.currency)
+    const [currency, setCurrency] = useState<string | undefined>(expense?.currencyAlfa)
     const [category, setCategory] = useState<string[] | undefined>(expense != null ? [expense.category] : undefined)
     const [expenseType, setExpenseType] = useState<string | undefined>(expense?.expenseType)
     const [description, setDescription] = useState<string | undefined>(expense?.description)
@@ -43,7 +44,7 @@ export const ExpenseDetails = ({ expense, show, isShown }: Props) => {
     const setFieldFromExpense = (expense?: Expense) => {
         setDate(expense?.date)
         setAmount(expense?.amount)
-        setCurrency(expense?.currency)
+        setCurrency(expense?.currencyAlfa)
         setCategory(expense != null ? [expense.category] : undefined)
         setExpenseType(expense?.expenseType)
         setDescription(expense?.description)
@@ -74,7 +75,7 @@ export const ExpenseDetails = ({ expense, show, isShown }: Props) => {
             description: description,
             amount: amount,
             expenseType: expenseType as ExpenseType,
-            currency: currency
+            currencyAlfa: currency
         }
 
         const validFields = getExpenseValidFields(expenseUpdates)
@@ -109,9 +110,6 @@ export const ExpenseDetails = ({ expense, show, isShown }: Props) => {
         setValidFields(undefined)
     }
 
-    // TODO: create separate table 
-    const dummyCurrencies = ["GEL", "RSD", "USD", "EUR", "RUB"]
-
     const expenseTypes: [ExpenseType, string][] = [["outcome", "Outcome"], ["income", "Income"]];
 
     return (
@@ -141,10 +139,10 @@ export const ExpenseDetails = ({ expense, show, isShown }: Props) => {
                         <div className="currency">
                             <SimpleSelect 
                                 placeholder="CUR" value={currency} onChange={setCurrency} 
-                                options={dummyCurrencies.map(val => {return {value: val, label: val}})} 
+                                options={currencies.map(val => {return {value: val.alfa, label: val.alfa}})} 
                                 disabled={notEditable}
                             />
-                            <span className='required-field' hidden={validFields?.currency ?? true}>
+                            <span className='required-field' hidden={validFields?.currencyAlfa ?? true}>
                                 *must be filled
                             </span>
                         </div>

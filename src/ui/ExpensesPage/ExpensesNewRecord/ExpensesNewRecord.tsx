@@ -6,10 +6,11 @@ import { DATEPICKER_INPUT_DATE_FORMAT } from 'constant';
 import { useAppDispatch, useAppSelector } from 'hook';
 import { addExpense } from 'store/reducer/expenses';
 import { TagSelect, SimpleSelect } from 'ui/common/form';
-import { Category, Expense, ExpenseType } from 'type';
+import { Expense, ExpenseType } from 'type';
 
 import './_expenses-new-record.scss';
 import { addCategory, fetchCategories } from 'store/reducer/category';
+import { fetchCurrencies } from 'store/reducer/currency';
 
 type ExpensesRequiredFields = {
     [Key in keyof Omit<Expense, 'id' | 'createDate' | 'updateDate'>]: boolean;
@@ -19,6 +20,7 @@ export const ExpensesNewRecord = () => {
     const dispatch = useAppDispatch()
 
     const {categories} = useAppSelector(state => state.categoryReducer)
+    const {currencies} = useAppSelector(state => state.currencyReducer)
     const [requiredFields, setRequiredFields] = useState<ExpensesRequiredFields>({} as ExpensesRequiredFields)
     const [date, setDate] = useState<Date>(new Date())
     const [amount, setAmount] = useState<number>()
@@ -29,6 +31,7 @@ export const ExpensesNewRecord = () => {
 
     useEffect(() => {
         dispatch(fetchCategories())
+        dispatch(fetchCurrencies())
     }, [])
 
     const validateInput = (): boolean => {
@@ -45,7 +48,7 @@ export const ExpensesNewRecord = () => {
         }
         // TODO: check for valid currency
         if (currency == null || currency === '') {
-            reqFields.currency = true
+            reqFields.currencyAlfa = true
             isValid = false
         }
         if (category == null) {
@@ -77,7 +80,7 @@ export const ExpensesNewRecord = () => {
             description: description!,
             amount: amount!,
             expenseType: expenseType! as ExpenseType,
-            currency: currency!
+            currencyAlfa: currency!
         }
     }
 
@@ -104,9 +107,6 @@ export const ExpensesNewRecord = () => {
         }
     }
 
-    // TODO: create separate table 
-    const dummyCurrencies = ["GEL", "RSD", "USD", "EUR", "RUB"]
-
     const expenseTypes: [ExpenseType, string][] = [["outcome", "Outcome"], ["income", "Income"]];
     
     return (
@@ -129,9 +129,9 @@ export const ExpensesNewRecord = () => {
                 <div className="currency">
                     <SimpleSelect
                         placeholder="CUR" value={currency} onChange={setCurrency} 
-                        options={dummyCurrencies.map(val => {return {value: val, label: val}})}
+                        options={currencies.map(val => {return {value: val.alfa, label: val.alfa}})}
                     />
-                    <span className='required-field' hidden={!requiredFields.currency}>*must be filled</span>
+                    <span className='required-field' hidden={!requiredFields.currencyAlfa}>*must be filled</span>
                 </div>
                 <div className="flex-row-break"></div>
                 <div className="category">

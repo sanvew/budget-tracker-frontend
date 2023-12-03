@@ -1,6 +1,6 @@
 import Dexie from "dexie";
 
-import { Expense } from "type";
+import { Currency, Expense } from "type";
 import { Category } from "type/category";
 import DB_CHANGELOG, { IndexedDBChangelog } from "./changelog";
 
@@ -9,6 +9,7 @@ export class BudgetTrackingDB extends Dexie {
 
     expenses!: Dexie.Table<Expense, string>
     category!: Dexie.Table<Category, string>
+    currency!: Dexie.Table<Currency, string>
 
     constructor(changeLogs: IndexedDBChangelog[]) {
         super(BudgetTrackingDB.#DB_NAME)
@@ -16,7 +17,6 @@ export class BudgetTrackingDB extends Dexie {
             const v = this.version(version).stores(schema)
             transCallback != null && v.upgrade(transCallback) 
         }))
-        
     }
 }
 
